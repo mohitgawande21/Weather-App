@@ -1,0 +1,6 @@
+
+https://api.openweathermap.org/data/2.5/weather?q=London,uk&units=metric&APPID=95e924b2ae8d8cf81615ea228645a040
+
+https://api.openweathermap.org/data/2.5/forecast?lat=44.34&lon=10.99&appid=95e924b2ae8d8cf81615ea228645a040&cnt=5
+
+https://openweathermap.org/img/wn/10d@2x.png
