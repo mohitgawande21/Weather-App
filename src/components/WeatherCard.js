@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+
 export default function WeatherCard() {
 
     const [cityRes, setCityRes] = useState({})
@@ -7,7 +8,7 @@ export default function WeatherCard() {
     useEffect(() => {
         (async function () {
             try {
-                const res = await fetch('https://api.openweathermap.org/data/2.5/weather?q=mumbai&units=metric&APPID=95e924b2ae8d8cf81615ea228645a040')
+                const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=mumbai&units=metric&APPID=${process.env.REACT_APP_API}`)
                 const data = await res.json()
                 setCityRes(data)
                 setUrl(`https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`)
