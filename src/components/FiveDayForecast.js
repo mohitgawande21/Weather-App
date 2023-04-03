@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify';
+import { useParams } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
-export default function FiveDayForecast({ inputCityName }) {
+export default function FiveDayForecast() {
 
   const [cityRes, setCityRes] = useState({})
+  const {id} = useParams()
 
   useEffect(() => {
     (async function () {
       try {
-        const res = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${inputCityName}&units=metric&appid=${process.env.REACT_APP_API}&cnt=5`)
+        const res = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${id}&units=metric&appid=${process.env.REACT_APP_API}&cnt=5`)
         const data = await res.json()
         setCityRes(data)
         toast.success('Forecast Success!', {
@@ -38,7 +40,7 @@ export default function FiveDayForecast({ inputCityName }) {
 
   return (
     <>
-      <h3 className='text-center'>City - {inputCityName}</h3>
+      <h3 className='text-center'>City - {id}</h3>
       <div className='d-flex flex-wrap justify-content-center'>
         {cityRes?.list?.map((item, ind) => {
           return <div key={ind} className=" mx-1 card w-25 m-auto my-3" >

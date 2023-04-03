@@ -56,7 +56,7 @@ function App() {
             <Route path='/'
               element={<WeatherCard onClickCity={onClickCity} inputCityName={inputCityName} cityRes={cityRes} url={url} />
               } />
-            <Route path='/:id' element={<FiveDayForecast inputCityName={inputCityName} url={url} />} />
+            <Route path='/:id' element={<FiveDayForecast />} />
           </Routes>
         </div>
       </Router>
