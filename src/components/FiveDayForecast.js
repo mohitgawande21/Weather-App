@@ -20,7 +20,7 @@ export default function FiveDayForecast() {
         setCityRes(data)
         toast.success('Forecast Success!', {
           position: "top-center",
-          autoClose: 1000,
+          autoClose: 500,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -31,7 +31,7 @@ export default function FiveDayForecast() {
       } catch (err) {
         toast.error('City Not Found', {
           position: "top-center",
-          autoClose: 1000,
+          autoClose: 500,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
