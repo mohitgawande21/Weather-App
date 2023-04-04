@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux'
 import 'react-toastify/dist/ReactToastify.css';
 export default function FiveDayForecast() {
 
   const [cityRes, setCityRes] = useState({})
-  const {id} = useParams()
+  const { id } = useParams()
+
+  let check = useSelector((state) => {
+    return state.Check
+  })
 
   useEffect(() => {
     (async function () {
       try {
-        const res = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${id}&units=metric&appid=${process.env.REACT_APP_API}&cnt=5`)
+        const res = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${id}&${!check ? "units=metric" : "units=imperial"}&appid=${process.env.REACT_APP_API}&cnt=5`)
         const data = await res.json()
         setCityRes(data)
         toast.success('Forecast Success!', {
@@ -39,6 +44,7 @@ export default function FiveDayForecast() {
   }, [])
 
   return (
+
     <>
       <h3 className='text-center'>City - {id}</h3>
       <div className='d-flex flex-wrap justify-content-center'>
@@ -47,7 +53,7 @@ export default function FiveDayForecast() {
             <div className="card-body text-center">
               <h6 className="card-text">{new Date(item.dt * 1000).toUTCString()}</h6>
               <img className="card-img-top" src={`https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`} />
-              <div><strong className="card-text">{item?.main?.temp} °C</strong></div>
+              <div><strong className="card-text">{item?.main?.temp} {check ? '°F' : '°C'}</strong></div>
               <div><strong className="card-text">{item.weather[0].description}</strong></div>
             </div>
           </div>

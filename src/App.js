@@ -1,6 +1,6 @@
 import Header from './components/Header'
 import WeatherCard from './components/WeatherCard'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -17,6 +17,7 @@ function App() {
   })
 
   const onClickCity = async () => {
+    inputCityName= inputCityName.length ? inputCityName : 'london';
     try {
       const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${inputCityName}&units=metric&APPID=${process.env.REACT_APP_API}`)
       const data = await res.json()
@@ -46,6 +47,10 @@ function App() {
       console.log(err.message)
     }
   }
+
+  useEffect(()=>{
+    onClickCity()
+  },[])
   return (
     <>
       <Router>
