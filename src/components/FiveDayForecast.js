@@ -52,7 +52,7 @@ export default function FiveDayForecast() {
           return <div key={ind} className=" mx-1 card w-25 m-auto my-3" >
             <div className="card-body text-center">
               <h6 className="card-text">{new Date(item.dt * 1000).toUTCString()}</h6>
-              <img className="card-img-top" src={`https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`} />
+              <img src={`https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`} />
               <div><strong className="card-text">{item?.main?.temp} {check ? '°F' : '°C'}</strong></div>
               <div><strong className="card-text">{item.weather[0].description}</strong></div>
             </div>
