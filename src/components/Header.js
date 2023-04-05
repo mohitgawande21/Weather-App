@@ -1,16 +1,10 @@
-import React, { useRef, useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { onSubmit } from '../Redux/ActionCreator'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import banner from './background.jpg'
 import logo from './favicon.png'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSearch } from '@fortawesome/free-solid-svg-icons'
-export default function Header({ onClickCity }) {
 
-    const dispatch = useDispatch()
-    const inputCity = useRef('')
-
+export default function Header({ inputCityName }) {
+    inputCityName = inputCityName.length ? inputCityName : 'london';
     const imgStyle = {
         position: "fixed",
         width: '100%',
@@ -19,7 +13,6 @@ export default function Header({ onClickCity }) {
         left: 0,
         top: 0,
     }
-    let inputCityName = inputCity?.current.value ? inputCity?.current.value : 'london';
     return (
         <div>
             <div className='d-flex flex-wrap justify-content-between align-items-center p-1 '>
@@ -34,16 +27,6 @@ export default function Header({ onClickCity }) {
 
             </div>
             <img src={banner} style={imgStyle} />
-            <div className='my-3'>
-                <br />
-                <br />
-                <div className='my-3 d-flex justify-content-center align-items-center '>
-                    <input className='border-0 rounded-top' onChange={(e) => { dispatch(onSubmit(inputCity.current.value)) }} ref={inputCity} placeholder='Enter city name' />
-                    <div className=''>
-                        {inputCity?.current?.value?.length ? <div className='mx-1' onClick={onClickCity} type="submit" ><FontAwesomeIcon icon={faSearch} /></div> : ''}
-                    </div>
-                </div>
-            </div>
         </div>
     )
 }

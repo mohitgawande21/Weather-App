@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 import 'react-toastify/dist/ReactToastify.css';
 export default function FiveDayForecast() {
 
-  const [cityRes, setCityRes] = useState({})
+  const [cityRes, setCityRes] = useState([])
   const { id } = useParams()
 
   let check = useSelector((state) => {
@@ -18,27 +18,31 @@ export default function FiveDayForecast() {
         const res = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${id}&${!check ? "units=metric" : "units=imperial"}&appid=${process.env.REACT_APP_API}&cnt=5`)
         const data = await res.json()
         setCityRes(data)
-        toast.success('Forecast Success!', {
-          position: "top-center",
-          autoClose: 500,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        if (data.cod == 404) {
+          toast.error('City Not Found', {
+            position: "top-center",
+            autoClose: 500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        } else {
+          toast.success('Forecast Success!', {
+            position: "top-center",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        }
       } catch (err) {
-        toast.error('City Not Found', {
-          position: "top-center",
-          autoClose: 500,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        console.log(err)
       }
     })()
   }, [])
@@ -46,8 +50,11 @@ export default function FiveDayForecast() {
   return (
 
     <>
-      <h4 className='text-center'>City - {id}</h4>
-      <div className='d-flex flex-wrap justify-content-center'>
+      <br />
+      <br />
+      <ToastContainer />
+      <h4 className='text-center my-3'>City - {id}</h4>
+      <div className='d-flex flex-wrap justify-content-center my-3'>
         {cityRes?.list?.map((item, ind) => {
           return <div key={ind} className=" mx-1 card  m-auto my-1  bg-light bg-gradient " >
             <div className="card-body text-center shadow ">
