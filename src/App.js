@@ -2,7 +2,7 @@ import Header from './components/Header'
 import WeatherCard from './components/WeatherCard'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { toast } from 'react-toastify';
+import {ToastContainer ,toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Footer from './components/Footer'
 import FiveDayForecast from './components/FiveDayForecast'
@@ -49,6 +49,16 @@ function App() {
         })
       }
     } catch (err) {
+      toast.error('City Not Found', {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       console.log(err.message)
     }
   }
