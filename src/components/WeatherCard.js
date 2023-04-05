@@ -35,7 +35,7 @@ export default function WeatherCard({ inputCityName, url, cityRes }) {
     return <>
 
         <div className='d-flex justify-content-center  my-3 '>
-            <div className="card mb-3 bg-light" style={{ width: '500px' }}>
+            <div className="card mb-3 bg-light shadow" style={{ width: '500px' }}>
                 <div className="row g-0">
                     <div className="col-md-4 d-flex justify-content-center">
                         <img src={url} alt={url} className="img-fluid rounded-start" />
