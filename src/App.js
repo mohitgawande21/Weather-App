@@ -1,12 +1,14 @@
 import Header from './components/Header'
-import WeatherCard from './components/WeatherCard'
-import React, { useEffect, useState } from 'react'
+// import WeatherCard from './components/WeatherCard'
+import React, { useEffect, useState, Suspense } from 'react'
 import { useSelector } from 'react-redux'
-import {ToastContainer ,toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Footer from './components/Footer'
-import FiveDayForecast from './components/FiveDayForecast'
+// import FiveDayForecast from './components/FiveDayForecast'
 import { BrowserRouter as Router, Routes, Route, } from 'react-router-dom'
+const FiveDayForecastLazy = React.lazy(() => import('./components/FiveDayForecast'))
+const WeatherCardLazy = React.lazy(() => import('./components/WeatherCard'))
 function App() {
 
   const [cityRes, setCityRes] = useState({})
@@ -72,9 +74,17 @@ function App() {
           <Header inputCityName={inputCityName} />
           <Routes>
             <Route path='/'
-              element={<WeatherCard onClickCity={onClickCity} inputCityName={inputCityName} cityRes={cityRes} url={url} />
+              element={<Suspense fallback={<div className="d-flex justify-content-center m-5">
+              <div className="spinner-border text-warning m-5" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            </div>}><WeatherCardLazy onClickCity={onClickCity} inputCityName={inputCityName} cityRes={cityRes} url={url} /></Suspense>
               } />
-            <Route path='/:id' element={<FiveDayForecast />} />
+            <Route path='/:id' element={<Suspense fallback={<div className="d-flex justify-content-center m-5">
+              <div className="spinner-border text-warning m-5" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            </div>}><FiveDayForecastLazy /> </Suspense>} />
           </Routes>
         </div>
         <Footer />
