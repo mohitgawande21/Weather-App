@@ -49,8 +49,8 @@ export default function WeatherCard({ inputCityName, url, cityRes, onClickCity }
             <br />
             <div className=' '>
                 {/* <input className='border-0 rounded-top' onChange={(e) => { dispatch(onSubmit(inputCity.current.value)) }} ref={inputCity} placeholder='Enter city name' /> */}
-                <div className='my-3 d-flex justify-content-center align-items-center'>
-                    <InputSuggest inputCity={inputCity.current.value} inputComp={<input className='border-0 rounded-top' onChange={(e) => { dispatch(onSubmit(inputCity.current.value)) }} ref={inputCity} placeholder='Enter city name' />} />
+                <div className='my-3 flex-wrap d-flex justify-content-center align-items-center'>
+                    <InputSuggest  onClickCity={onClickCity} inputCity={inputCity.current.value} inputComp={<input className='border-0 rounded-top' onChange={(e) => { dispatch(onSubmit(inputCity.current.value)) }} ref={inputCity} placeholder='Enter city name' />} />
                     {inputCity?.current?.value?.length ? <div className='mx-1' onClick={onClickCity} type="submit" ><FontAwesomeIcon icon={faSearch} /></div> : ''}
                 </div>
             </div>

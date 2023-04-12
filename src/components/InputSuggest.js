@@ -3,7 +3,7 @@ import { useState, useEffect, useMemo } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useDispatch } from 'react-redux'
 import { onSubmit } from '../Redux/ActionCreator'
-export default function InputSuggest({ inputComp, inputCity }) {
+export default function InputSuggest({ inputComp, inputCity,onClickCity }) {
     const dispatch = useDispatch()
     const [cities, setCities] = useState([]);
     let url = "https://countriesnow.space/api/v0.1/countries";
@@ -41,10 +41,10 @@ export default function InputSuggest({ inputComp, inputCity }) {
     }, [inputCity?.length]);
 
     return (
-        <div className="my-3 d-flex ">
+        <div className="my-3 d-flex flex-wrap justify-content-center">
             {inputComp}
             <select className='border-0 rounded-top'
-                onChange={(e) => { setSelectedCity(e.target.value); dispatch(onSubmit(e.target.value)) }}
+                onChange={(e) => { setSelectedCity(e.target.value); dispatch(onSubmit(e.target.value)) ; onClickCity() }}
                 value={selectedCity}
             >
                 {suggestion?.map((city) => {
