@@ -18,12 +18,11 @@ function App() {
   })
 
   const onClickCity = async () => {
-    inputCityName = inputCityName.length ? inputCityName : 'london';
+    inputCityName = inputCityName?.length ? inputCityName : 'london';
     try {
       const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${inputCityName}&units=metric&APPID=${process.env.REACT_APP_API}`)
       const data = await res.json()
       setCityRes(data)
-      console.log('data',data)
       setUrl(`https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`)
       if (data.cod == 404) {
         toast.error('City Not Found', {

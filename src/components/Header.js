@@ -4,7 +4,7 @@ import banner from './background.jpg'
 import logo from './favicon.png'
 
 export default function Header({ inputCityName }) {
-    inputCityName = inputCityName.length ? inputCityName : 'london';
+    inputCityName = inputCityName?.length ? inputCityName : 'london';
     const imgStyle = {
         position: "fixed",
         width: '100%',
