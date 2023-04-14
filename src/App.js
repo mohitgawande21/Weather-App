@@ -19,8 +19,8 @@ function App() {
     return state.inputCity
   })
 
-  const onClickCity = async () => {
-    inputCityName = inputCityName?.length ? inputCityName : 'london';
+  const onClickCity = async (val) => {
+    inputCityName = val?.length ? val : inputCityName?.length ? inputCityName : 'london';
     try {
       const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${inputCityName}&units=metric&APPID=${process.env.REACT_APP_API}`)
       const data = await res.json()

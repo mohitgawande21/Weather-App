@@ -44,7 +44,7 @@ export default function InputSuggest({ inputComp, inputCity,onClickCity }) {
         <div className="my-3 d-flex flex-wrap justify-content-center">
             {inputComp}
             <select className='border-0 rounded-top'
-                onChange={(e) => { setSelectedCity(e.target.value); dispatch(onSubmit(e.target.value)) ; onClickCity() }}
+                onChange={(e) => { setSelectedCity(e.target.value); dispatch(onSubmit(e.target.value)) ; onClickCity(e.target.value) }}
                 value={selectedCity}
             >
                 {suggestion?.map((city) => {

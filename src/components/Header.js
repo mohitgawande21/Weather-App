@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import banner from './background.jpg'
 import logo from './favicon.png'
-
+import '../hover.css'
 export default function Header({ inputCityName }) {
     inputCityName = inputCityName?.length ? inputCityName : 'london';
     const imgStyle = {
@@ -17,9 +17,11 @@ export default function Header({ inputCityName }) {
         <div>
             <div className='d-flex flex-wrap justify-content-between align-items-center p-1 '>
                 <div className='d-flex align-items-center fixed-top bg-dark '>
-                    <img className='mx-3' src={logo} width='50px' height='50px' />
-                    <h6 className=' mx-3 text-white '>Weather App</h6>
-                    <Link className='text-info mx-3 ml-3  ' to='/'>Home</Link>
+                    <Link className='text-info mx-3 ml-3  ' to='/'>
+                        <div className=' hover-overlay'>
+                            <img src={logo} width='50px' height='50px' />
+                        </div>
+                    </Link>
                     <Link className='text-info mx-3 ' to={`/${inputCityName}`}>
                         <span>Five Day Forecast</span>
                     </Link>
