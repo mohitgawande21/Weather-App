@@ -19,7 +19,7 @@ export default function InputSuggest({ inputComp, inputCity,onClickCity }) {
 
     const [selectedCity, setSelectedCity] = useState("");
 
-    const memoizeFilterVal = () => {
+    const FilterVal = () => {
         let arr = [];
         let c = cities?.map((item) => {
             return item.cities.filter((item1) => {
@@ -32,18 +32,25 @@ export default function InputSuggest({ inputComp, inputCity,onClickCity }) {
 
         return arr;
     }
+    const memoizeFilterVal = useMemo(()=>FilterVal(),[inputCity])
+
     useEffect(() => {
         if (inputCity?.length > 0) {
-            setSuggestion(memoizeFilterVal());
-            setSelectedCity(memoizeFilterVal()[0]);
-            dispatch(onSubmit(memoizeFilterVal()[0]))
+            setSuggestion(memoizeFilterVal);
+            setSelectedCity(memoizeFilterVal[0]);
+            dispatch(onSubmit(memoizeFilterVal[0]))
         }
     }, [inputCity?.length]);
+    
+    useEffect(()=>{
+        console.log(suggestion)
+        suggestion?.length === 1 && onClickCity(suggestion[0])
+    },[suggestion?.length])
 
     return (
-        <div className="my-3 d-flex flex-wrap justify-content-center">
+        <div className="my-3 d-flex flex-wrap justify-content-center" >
             {inputComp}
-            <select className='border-0 rounded-top'
+            <select className='border-0 rounded-top' style={{width:"100px"}}
                 onChange={(e) => { setSelectedCity(e.target.value); dispatch(onSubmit(e.target.value)) ; onClickCity(e.target.value) }}
                 value={selectedCity}
             >
