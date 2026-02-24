@@ -19,33 +19,29 @@ export default function InputSuggest({ inputComp, inputCity,onClickCity }) {
 
     const [selectedCity, setSelectedCity] = useState("");
 
-    const FilterVal = () => {
-        let arr = [];
-        cities?.map((item) => {
-            return item.cities.filter((item1) => {
-                return (
-                    item1.includes(inputCity.charAt(0).toUpperCase() + inputCity.slice(1)) &&
-                    arr.push(item1)
-                );
+    const memoizeFilterVal = useMemo(() => {
+        const arr = [];
+        const needle = inputCity?.charAt(0).toUpperCase() + inputCity?.slice(1);
+        cities?.forEach((item) => {
+            item.cities.forEach((item1) => {
+                if (item1.includes(needle)) arr.push(item1);
             });
         });
-
         return arr;
-    }
-    const memoizeFilterVal = useMemo(()=>FilterVal(),[inputCity, cities])
+    }, [inputCity, cities]);
 
     useEffect(() => {
         if (inputCity?.length > 0) {
             setSuggestion(memoizeFilterVal);
             setSelectedCity(memoizeFilterVal[0]);
-            dispatch(onSubmit(memoizeFilterVal[0]))
+            dispatch(onSubmit(memoizeFilterVal[0]));
         }
-    }, [inputCity?.length]);
+    }, [inputCity, memoizeFilterVal, dispatch]);
     
     useEffect(()=>{
         console.log(suggestion)
-        suggestion?.length === 1 && onClickCity(suggestion[0])
-    },[suggestion?.length])
+        if (suggestion?.length === 1) onClickCity(suggestion[0]);
+    },[suggestion, onClickCity])
 
     return (
         <div className="my-3 d-flex flex-wrap justify-content-center" >

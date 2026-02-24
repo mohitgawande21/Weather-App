@@ -1,6 +1,6 @@
 import Header from './components/Header'
 // import WeatherCard from './components/WeatherCard'
-import React, { useEffect, useState, Suspense } from 'react'
+import React, { useEffect, useState, Suspense, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -19,10 +19,10 @@ function App() {
     return state.inputCity
   })
 
-  const onClickCity = async (val) => {
-    inputCityName = val?.length ? val : inputCityName?.length ? inputCityName : 'london';
+  const onClickCity = useCallback(async (val) => {
+    const cityToFetch = val?.length ? val : (inputCityName?.length ? inputCityName : 'london');
     try {
-      const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${inputCityName}&units=metric&APPID=${process.env.REACT_APP_API}`)
+      const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cityToFetch}&units=metric&APPID=${process.env.REACT_APP_API}`)
       const data = await res.json()
       setCityRes(data)
       setUrl(`https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`)
@@ -62,11 +62,11 @@ function App() {
       });
       console.log(err.message)
     }
-  }
+  }, [inputCityName])
 
   useEffect(() => {
     onClickCity()
-  }, [])
+  }, [onClickCity])
   return (
     <>
       <Router>
