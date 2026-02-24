@@ -18,7 +18,7 @@ export default function FiveDayForecast() {
         const res = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${id}&${!check ? "units=metric" : "units=imperial"}&appid=${process.env.REACT_APP_API}&cnt=5`)
         const data = await res.json()
         setCityRes(data)
-        if (data.cod == 404) {
+        if (data.cod === 404) {
           toast.error('City Not Found', {
             position: "top-center",
             autoClose: 500,
@@ -45,7 +45,7 @@ export default function FiveDayForecast() {
         console.log(err)
       }
     })()
-  }, [])
+  }, [check,id])
 
   return (
 
@@ -59,7 +59,7 @@ export default function FiveDayForecast() {
           return <div key={ind} className=" mx-1 card  m-auto my-1  bg-light bg-gradient " >
             <div className="card-body text-center shadow ">
               <h6 className="card-text">{new Date(item.dt * 1000).toUTCString()}</h6>
-              <img src={`https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`} />
+              <img alt={item.weather[0].description}  src={`https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`} />
               <div><strong className="card-text">{item?.main?.temp} {check ? '°F' : '°C'}</strong></div>
               <div><strong className="card-text">{item.weather[0].description}</strong></div>
             </div>

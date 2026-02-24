@@ -13,7 +13,7 @@ export default function InputSuggest({ inputComp, inputCity,onClickCity }) {
             const data = await res.json();
             setCities(data.data);
         })();
-    }, []);
+    }, [url]);
 
     const [suggestion, setSuggestion] = useState([]);
 
@@ -21,7 +21,7 @@ export default function InputSuggest({ inputComp, inputCity,onClickCity }) {
 
     const FilterVal = () => {
         let arr = [];
-        let c = cities?.map((item) => {
+        cities?.map((item) => {
             return item.cities.filter((item1) => {
                 return (
                     item1.includes(inputCity.charAt(0).toUpperCase() + inputCity.slice(1)) &&
@@ -32,7 +32,7 @@ export default function InputSuggest({ inputComp, inputCity,onClickCity }) {
 
         return arr;
     }
-    const memoizeFilterVal = useMemo(()=>FilterVal(),[inputCity])
+    const memoizeFilterVal = useMemo(()=>FilterVal(),[inputCity, cities])
 
     useEffect(() => {
         if (inputCity?.length > 0) {

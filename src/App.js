@@ -2,7 +2,7 @@ import Header from './components/Header'
 // import WeatherCard from './components/WeatherCard'
 import React, { useEffect, useState, Suspense } from 'react'
 import { useSelector } from 'react-redux'
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Footer from './components/Footer'
 // import FiveDayForecast from './components/FiveDayForecast'
@@ -26,7 +26,7 @@ function App() {
       const data = await res.json()
       setCityRes(data)
       setUrl(`https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`)
-      if (data.cod == 404) {
+      if (data.cod === 404) {
         toast.error('City Not Found', {
           position: "top-center",
           autoClose: 1000,
@@ -75,10 +75,10 @@ function App() {
           <Routes>
             <Route path='/'
               element={<Suspense fallback={<div className="d-flex justify-content-center m-5">
-              <div className="spinner-border text-warning m-5" role="status">
-                <span className="visually-hidden">Loading...</span>
-              </div>
-            </div>}><WeatherCardLazy onClickCity={onClickCity} inputCityName={inputCityName} cityRes={cityRes} url={url} /></Suspense>
+                <div className="spinner-border text-warning m-5" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+              </div>}><WeatherCardLazy onClickCity={onClickCity} inputCityName={inputCityName} cityRes={cityRes} url={url} /></Suspense>
               } />
             <Route path='/:id' element={<Suspense fallback={<div className="d-flex justify-content-center m-5">
               <div className="spinner-border text-warning m-5" role="status">

@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 import { onSubmit } from '../Redux/ActionCreator'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import InputSuggest from './InputSuggest'
 export default function WeatherCard({ inputCityName, url, cityRes, onClickCity }) {
     const dispatch = useDispatch()
@@ -22,6 +22,7 @@ export default function WeatherCard({ inputCityName, url, cityRes, onClickCity }
     let check = useSelector((state) => {
         return state.Check
     })
+
     useEffect(() => {
         if (!check) {
             let d = cityRes?.main?.temp
@@ -30,7 +31,8 @@ export default function WeatherCard({ inputCityName, url, cityRes, onClickCity }
             let f = (cityRes?.main?.temp * (9 / 5) + 32)
             setTemp(f)
         }
-    }, [cityRes?.main?.temp])
+    }, [cityRes?.main?.temp, check])
+
     const changeUnit = () => {
         dispatch(onToggle(!check))
         if (check) {
