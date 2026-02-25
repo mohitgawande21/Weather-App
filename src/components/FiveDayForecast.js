@@ -12,7 +12,7 @@ export default function FiveDayForecast() {
     return state.Check
   })
 
-  useEffect(() => {
+  useEffect(() => { 
     (async function () {
       try {
         const apiKey = process.env.REACT_APP_API;
