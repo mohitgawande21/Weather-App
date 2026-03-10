@@ -15,9 +15,9 @@ export default function FiveDayForecast() {
   useEffect(() => { 
     (async function () {
       try {
-        const apiKey = process.env.REACT_APP_API;
+        const apiKey = process.env.REACT_APP_WEATHER_API_KEY;
         if (!apiKey) {
-          toast.error('Missing API key: set REACT_APP_API in your .env', { position: "top-center", autoClose: 3000 });
+          toast.error('Missing API key: set REACT_APP_WEATHER_API_KEY in your .env', { position: "top-center", autoClose: 3000 });
           return;
         }
         const res = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${id}&${!check ? "units=metric" : "units=imperial"}&appid=${apiKey}&cnt=5`)
