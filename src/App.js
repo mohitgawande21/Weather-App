@@ -22,7 +22,7 @@ function App() {
   const onClickCity = useCallback(async (val) => {
     const cityToFetch = val?.length ? val : (inputCityName?.length ? inputCityName : 'london');
     try {
-      const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cityToFetch}&units=metric&APPID=${process.env.REACT_APP_API}`)
+      const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cityToFetch}&units=metric&APPID=${process.env.REACT_APP_WEATHER_API_KEY}`)
       const data = await res.json()
       setCityRes(data)
       setUrl(`https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`)
