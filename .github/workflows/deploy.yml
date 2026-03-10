@@ -25,7 +25,7 @@ jobs:
       - name: Build project
         run: npm run build
         env:
-          REACT_APP_WEATHER_API_KEY: ${{ secrets.REACT_APP_WEATHER_API_KEY }}
+          APP_WEATHER_API_KEY: ${{ secrets.APP_WEATHER_API_KEY }}
 
       - name: Deploy to S3
         uses: jakejarvis/s3-sync-action@master
