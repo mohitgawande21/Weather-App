@@ -46,8 +46,8 @@ export default function WeatherCard({
 
   const serachIconStyle = {
     position: "absolute",
-    left: "162px",
-    top: "18px",
+    left: "177px",
+    top: "24px",
   };
   const inputIconStyle = {
     position: "relative",
@@ -66,7 +66,7 @@ export default function WeatherCard({
                 inputCity={inputCity.current.value}
                 inputComp={
                   <input
-                    className="border-0 rounded-top"
+                    className="form-control w-120"
                     onChange={(e) => {
                       dispatch(onSubmit(inputCity.current.value));
                     }}
@@ -91,7 +91,7 @@ export default function WeatherCard({
           </div>
         </div>
       </div>
-      <div className="d-flex justify-content-center  my-3 ">
+      <div className="d-flex justify-content-center  my-5 ">
         <div className="card mb-3 bg-light shadow" style={{ width: "500px" }}>
           <div className="row g-0">
             <div className="col-md-4 d-flex justify-content-center">

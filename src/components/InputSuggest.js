@@ -46,12 +46,11 @@ export default function InputSuggest({ inputComp, inputCity, onClickCity }) {
   }, [suggestion, onClickCity]);
 
   return (
-    <div className="my-3 d-flex flex-wrap justify-content-center">
+    <div className="my-3 w-100">
       {inputComp}
       {suggestion?.length > 1 && (
         <select
-          className="border-0 rounded-top"
-          style={{ width: "100px" }}
+          className="dropdown-menu show w-100"
           onChange={(e) => {
             setSelectedCity(e.target.value);
             onClickCity(e.target.value);

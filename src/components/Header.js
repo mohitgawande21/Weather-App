@@ -17,9 +17,9 @@ export default function Header({ inputCityName }) {
       <div className="d-flex flex-wrap justify-content-between align-items-center p-1 ">
         <div className="d-flex align-items-center fixed-top bg-dark ">
           <Link className=" text-info mx-3 ml-3  " to="/">
-            <div class="img-zoom-container">
+            <div className="img-zoom-container">
               <img
-                class="img-fluid"
+                className="img-fluid"
                 alt="logo"
                 src={logo}
                 width="50px"
