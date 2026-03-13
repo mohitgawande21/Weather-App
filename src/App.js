@@ -144,10 +144,6 @@ function App() {
         };
 
         fetchWeatherByCoords();
-        setCoords({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        });
       },
       (err) =>
         toast.error(`Geolocation error: ${err.message}`, {
