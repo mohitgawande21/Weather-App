@@ -160,7 +160,7 @@ function App() {
           theme: "light",
         }),
     );
-  }, [navigator.geolocation]);
+  }, []);
 
   return (
     <>
