@@ -78,7 +78,16 @@ function App() {
 
   useEffect(() => {
     if (!navigator.geolocation) {
-      setError("Geolocation is not supported by your browser");
+      toast.error("Geolocation is not supported by your browser", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       return;
     }
 
@@ -140,7 +149,17 @@ function App() {
           lng: position.coords.longitude,
         });
       },
-      (err) => setError(err.message),
+      (err) =>
+        toast.error(`Geolocation error: ${err.message}`, {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        }),
     );
   }, []);
 
