@@ -25,10 +25,10 @@ export default function WeatherCard({
   useEffect(() => {
     if (!check) {
       let d = cityRes?.main?.temp;
-      setTemp(d);
+      setTemp(Math.floor(d));
     } else {
       let f = cityRes?.main?.temp * (9 / 5) + 32;
-      setTemp(f);
+      setTemp(Math.floor(f));
     }
   }, [cityRes?.main?.temp, check]);
 
@@ -36,10 +36,10 @@ export default function WeatherCard({
     dispatch(onToggle(!check));
     if (check) {
       let d = cityRes?.main?.temp;
-      setTemp(d);
+      setTemp(Math.floor(d));
     } else {
       let f = cityRes?.main?.temp * (9 / 5) + 32;
-      setTemp(f);
+      setTemp(Math.floor(f));
     }
   };
   const inputCity = useRef("");
