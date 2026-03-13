@@ -1,4 +1,16 @@
-.hover-overlay:hover{
-    background-color: rgb(173, 169, 169);
-    border-radius: 5px 15px;
+/* Custom CSS class for the container */
+.img-zoom-container {
+  overflow: hidden; /* Keeps the zoomed content inside the container boundaries */
+}
+
+/* Custom CSS for elements within the container */
+.img-zoom-container * {
+  transition: transform 0.3s ease; /* Smooth animation over 0.3 seconds */
+}
+
+/* Hover effect: scale the content up by 10% (1.1) when the container is hovered */
+.img-zoom-container:hover * {
+  transform: scale(
+    1.2
+  ); /* Adjust the scale value as needed (e.g., 1.2 for 20% zoom) */
 }

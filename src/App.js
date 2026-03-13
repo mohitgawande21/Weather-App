@@ -166,7 +166,7 @@ function App() {
     <>
       <Router>
         <div className="App">
-          <Header inputCityName={inputCityName} />
+          <Header inputCityName={currentCity} />
           <Routes>
             <Route
               path="/"
