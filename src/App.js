@@ -21,24 +21,48 @@ function App() {
   const inputCityRef = React.useRef(inputCityName);
   inputCityRef.current = inputCityName;
   const [currentCity, setCurrentCity] = useState("");
-  const onClickCity = useCallback(async (val) => {
-    val?.length && dispatch(onSubmit(val));
-    const cityToFetch = val?.length
-      ? val
-      : inputCityRef.current?.length
-        ? inputCityRef.current
-        : "";
-    try {
-      const res = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=${cityToFetch}&units=metric&APPID=${process.env.REACT_APP_WEATHER_API_KEY}`,
-      );
-      const data = await res.json();
-      setCityRes(data);
-      setCurrentCity(data.name);
-      setUrl(
-        `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`,
-      );
-      if (data.cod === 404) {
+  const onClickCity = useCallback(
+    async (val) => {
+      val?.length && dispatch(onSubmit(val));
+      const cityToFetch = val?.length
+        ? val
+        : inputCityRef.current?.length
+          ? inputCityRef.current
+          : "";
+      try {
+        const res = await fetch(
+          `https://api.openweathermap.org/data/2.5/weather?q=${cityToFetch}&units=metric&APPID=${process.env.REACT_APP_WEATHER_API_KEY}`,
+        );
+        const data = await res.json();
+        setCityRes(data);
+        setCurrentCity(data.name);
+        setUrl(
+          `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`,
+        );
+        if (data.cod === 404) {
+          toast.error("City Not Found", {
+            position: "top-center",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        } else {
+          toast.success("Weather Success!", {
+            position: "top-center",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        }
+      } catch (err) {
         toast.error("City Not Found", {
           position: "top-center",
           autoClose: 1000,
@@ -49,32 +73,11 @@ function App() {
           progress: undefined,
           theme: "light",
         });
-      } else {
-        toast.success("Weather Success!", {
-          position: "top-center",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        console.log(err.message);
       }
-    } catch (err) {
-      toast.error("City Not Found", {
-        position: "top-center",
-        autoClose: 1000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-      console.log(err.message);
-    }
-  }, []);
+    },
+    [dispatch],
+  );
 
   useEffect(() => {
     if (!navigator.geolocation) {
@@ -157,7 +160,7 @@ function App() {
           theme: "light",
         }),
     );
-  }, []);
+  }, [navigator.geolocation]);
 
   return (
     <>
