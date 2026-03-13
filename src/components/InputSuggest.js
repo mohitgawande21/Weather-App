@@ -1,64 +1,68 @@
-
 import { useState, useEffect, useMemo } from "react";
-import { v4 as uuidv4 } from "uuid";
-import { useDispatch } from 'react-redux'
-import { onSubmit } from '../Redux/ActionCreator'
-export default function InputSuggest({ inputComp, inputCity,onClickCity }) {
-    const dispatch = useDispatch()
-    const [cities, setCities] = useState([]);
-    let url = "https://countriesnow.space/api/v0.1/countries";
+
+export default function InputSuggest({ inputComp, inputCity, onClickCity }) {
+    const [allCities, setAllCities] = useState([]);
+    const [suggestion, setSuggestion] = useState([]);
+    const [selectedCity, setSelectedCity] = useState("");
+
+    const url = "https://countriesnow.space/api/v0.1/countries";
+
     useEffect(() => {
         (async function () {
             const res = await fetch(url);
             const data = await res.json();
-            setCities(data.data);
+            const flat = data.data?.flatMap((country) => country.cities) ?? [];
+            setAllCities(flat);
         })();
     }, [url]);
 
-    const [suggestion, setSuggestion] = useState([]);
-
-    const [selectedCity, setSelectedCity] = useState("");
-
     const memoizeFilterVal = useMemo(() => {
-        const arr = [];
-        const needle = inputCity?.charAt(0).toUpperCase() + inputCity?.slice(1);
-        cities?.forEach((item) => {
-            item.cities.forEach((item1) => {
-                if (item1.includes(needle)) arr.push(item1);
-            });
-        });
-        return arr;
-    }, [inputCity, cities]);
+        const query = inputCity?.trim().toLowerCase();
+        if (!query || query.length < 2) return [];
+
+        const matches = [];
+        for (const city of allCities) {
+            if (city.toLowerCase().startsWith(query)) {
+                matches.push(city);
+                if (matches.length >= 20) break;
+            }
+        }
+        return matches;
+    }, [inputCity, allCities]);
 
     useEffect(() => {
-        if (inputCity?.length > 0) {
-            setSuggestion(memoizeFilterVal);
+        setSuggestion(memoizeFilterVal);
+        if (memoizeFilterVal?.length) {
             setSelectedCity(memoizeFilterVal[0]);
-            dispatch(onSubmit(memoizeFilterVal[0]));
+        } else {
+            setSelectedCity("");
         }
-    }, [inputCity, memoizeFilterVal, dispatch]);
-    
-    useEffect(()=>{
-        console.log(suggestion)
-        if (suggestion?.length === 1) onClickCity(suggestion[0]);
-    },[suggestion, onClickCity])
+    }, [memoizeFilterVal]);
+
+    useEffect(() => {
+        if (suggestion?.length === 1) {
+            onClickCity(suggestion[0]);
+        }
+    }, [suggestion, onClickCity]);
 
     return (
-        <div className="my-3 d-flex flex-wrap justify-content-center" >
+        <div className="my-3 d-flex flex-wrap justify-content-center">
             {inputComp}
-            <select className='border-0 rounded-top' style={{width:"100px"}}
-                onChange={(e) => { setSelectedCity(e.target.value); dispatch(onSubmit(e.target.value)) ; onClickCity(e.target.value) }}
+            {suggestion?.length > 0 && <select
+                className="border-0 rounded-top"
+                style={{ width: "100px" }}
+                onChange={(e) => {
+                    setSelectedCity(e.target.value);
+                    onClickCity(e.target.value);
+                }}
                 value={selectedCity}
             >
-                {suggestion?.map((city) => {
-                    return (
-                        <option key={uuidv4()} value={city}>
-                            {city}
-                        </option>
-                    );
-                })}
-            </select>
-            
+                {suggestion?.map((city) => (
+                    <option key={city} value={city}>
+                        {city}
+                    </option>
+                ))}
+            </select>}
         </div>
     );
 }

@@ -1,26 +1,28 @@
 import Header from './components/Header'
 // import WeatherCard from './components/WeatherCard'
 import React, { useEffect, useState, Suspense, useCallback } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Footer from './components/Footer'
+import { onSubmit } from './Redux/ActionCreator'
 // import FiveDayForecast from './components/FiveDayForecast'
 import { BrowserRouter as Router, Routes, Route, } from 'react-router-dom'
 const FiveDayForecastLazy = React.lazy(() => import('./components/FiveDayForecast'))
 const WeatherCardLazy = React.lazy(() => import('./components/WeatherCard'))
 function App() {
 
+  const dispatch = useDispatch()
   const [cityRes, setCityRes] = useState({})
-
   const [url, setUrl] = useState('')
 
-  let inputCityName = useSelector((state) => {
-    return state.inputCity
-  })
+  const inputCityName = useSelector((state) => state.inputCity)
+  const inputCityRef = React.useRef(inputCityName)
+  inputCityRef.current = inputCityName
 
   const onClickCity = useCallback(async (val) => {
-    const cityToFetch = val?.length ? val : (inputCityName?.length ? inputCityName : 'london');
+    val?.length && dispatch(onSubmit(val))
+    const cityToFetch = val?.length ? val : (inputCityRef.current?.length ? inputCityRef.current : 'london');
     try {
       const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cityToFetch}&units=metric&APPID=${process.env.REACT_APP_WEATHER_API_KEY}`)
       const data = await res.json()
@@ -62,11 +64,12 @@ function App() {
       });
       console.log(err.message)
     }
-  }, [inputCityName])
+  }, [])
 
   useEffect(() => {
     onClickCity()
-  }, [onClickCity])
+  }, [])
+  console.log(inputCityName, inputCityRef.current, 'inputCityRef.current')
   return (
     <>
       <Router>
