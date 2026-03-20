@@ -1,20 +1,23 @@
 import { useState, useEffect, useMemo } from "react";
-
+import { useSelector, useDispatch } from "react-redux";
+import { saveAllCities } from "../Redux/ActionCreator";
 export default function InputSuggest({ inputComp, inputCity, onClickCity }) {
-  const [allCities, setAllCities] = useState([]);
   const [suggestion, setSuggestion] = useState([]);
   const [selectedCity, setSelectedCity] = useState("");
-
-  const url = "https://countriesnow.space/api/v0.1/countries";
-
+  const dispatch = useDispatch();
+  const allCities = useSelector((state) => state?.allCities ?? []);
   useEffect(() => {
-    (async function () {
+    async function fetchAllCities() {
+      const url = "https://countriesnow.space/api/v0.1/countries";
       const res = await fetch(url);
       const data = await res.json();
       const flat = data.data?.flatMap((country) => country.cities) ?? [];
-      setAllCities(flat);
-    })();
-  }, [url]);
+      dispatch(saveAllCities(flat));
+    }
+    if (allCities.length === 0) {
+      fetchAllCities();
+    }
+  }, [allCities.length]);
 
   const memoizeFilterVal = useMemo(() => {
     const query = inputCity?.trim().toLowerCase();
