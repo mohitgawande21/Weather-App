@@ -1,8 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import banner from "./background.jpg";
 import logo from "./favicon.png";
 import "../hover.css";
+const banner = "https://d3vgbv6p5fstcv.cloudfront.net/assets/background.jpg";
+
 export default function Header({ inputCityName }) {
   const imgStyle = {
     position: "fixed",
