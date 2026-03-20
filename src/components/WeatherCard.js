@@ -94,14 +94,14 @@ export default function WeatherCard({
       <div className="d-flex justify-content-center  my-5 ">
         <div className="card mb-3 bg-light shadow" style={{ width: "500px" }}>
           <div className="row g-0">
-            <div className="col-md-4 d-flex justify-content-center">
+            <div className="col-md-4 d-flex justify-content-center bg-light shadow ">
               <img src={url} alt={url} className="img-fluid rounded-start" />
             </div>
             <div className="col-md-8">
               <div className="card-body">
                 <h5 className="card-title text">
                   {temp ? temp : cityRes?.main?.temp} {!check ? "°C" : "°F"}
-                  <span className=" mx-1 form-switch">
+                  <span className=" mx-2 form-switch">
                     <input
                       checked={check}
                       onChange={changeUnit}
