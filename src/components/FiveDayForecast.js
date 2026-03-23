@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect } from "react";
+import { useEffect, useLayoutEffect, useCallback } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -23,6 +23,52 @@ export default function FiveDayForecast() {
     }
   }, [id, city]);
 
+  const fetchForecast = useCallback(
+    async function () {
+      try {
+        const apiKey = process.env.REACT_APP_WEATHER_API_KEY;
+        if (!apiKey) {
+          toast.error(
+            "Missing API key: set REACT_APP_WEATHER_API_KEY in your .env",
+            { position: "top-center", autoClose: 3000 },
+          );
+          return;
+        }
+        const res = await fetch(
+          `https://api.openweathermap.org/data/2.5/forecast?q=${id}&${!check ? "units=metric" : "units=imperial"}&appid=${apiKey}&cnt=5`,
+        );
+        const data = await res.json();
+        dispatch(futureWeather(data));
+        if (data.cod === 404) {
+          toast.error("City Not Found", {
+            position: "top-center",
+            autoClose: 500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        } else {
+          toast.success("Forecast Success!", {
+            position: "top-center",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    [dispatch, id, check],
+  );
+
   useEffect(() => {
     !city && localStorage.setItem("city", id);
     if (futureWeatherData?.city?.name !== id) {
@@ -30,48 +76,6 @@ export default function FiveDayForecast() {
     }
   }, [check, id, city, futureWeatherData?.city?.name, fetchForecast]);
 
-  async function fetchForecast() {
-    try {
-      const apiKey = process.env.REACT_APP_WEATHER_API_KEY;
-      if (!apiKey) {
-        toast.error(
-          "Missing API key: set REACT_APP_WEATHER_API_KEY in your .env",
-          { position: "top-center", autoClose: 3000 },
-        );
-        return;
-      }
-      const res = await fetch(
-        `https://api.openweathermap.org/data/2.5/forecast?q=${id}&${!check ? "units=metric" : "units=imperial"}&appid=${apiKey}&cnt=5`,
-      );
-      const data = await res.json();
-      dispatch(futureWeather(data));
-      if (data.cod === 404) {
-        toast.error("City Not Found", {
-          position: "top-center",
-          autoClose: 500,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-      } else {
-        toast.success("Forecast Success!", {
-          position: "top-center",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  }
   return (
     <>
       <br />
