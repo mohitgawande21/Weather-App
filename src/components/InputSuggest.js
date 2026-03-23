@@ -36,6 +36,7 @@ export default function InputSuggest({ inputComp, inputCity, onClickCity }) {
   useEffect(() => {
     setSuggestion(memoizeFilterVal);
     if (memoizeFilterVal?.length) {
+      localStorage.setItem("city", memoizeFilterVal[0]);
       setSelectedCity(memoizeFilterVal[0]);
     } else {
       setSelectedCity("");
@@ -44,9 +45,10 @@ export default function InputSuggest({ inputComp, inputCity, onClickCity }) {
 
   useEffect(() => {
     if (suggestion?.length === 1) {
+      localStorage.setItem("city", suggestion[0]);
       onClickCity(suggestion[0]);
     }
-  }, [suggestion, onClickCity]);
+  }, [suggestion.length]);
 
   return (
     <div className="my-3 w-100">
@@ -55,6 +57,7 @@ export default function InputSuggest({ inputComp, inputCity, onClickCity }) {
         <select
           className="dropdown-menu show w-100"
           onChange={(e) => {
+            localStorage.setItem("city", e.target.value);
             setSelectedCity(e.target.value);
             onClickCity(e.target.value);
           }}

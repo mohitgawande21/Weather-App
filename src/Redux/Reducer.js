@@ -4,6 +4,7 @@ const initialState = {
   inputCity: "",
   Check: false,
   allCities: [],
+  futureWeather: [],
 };
 
 export const Reducer = (state = initialState, action) => {
@@ -22,6 +23,11 @@ export const Reducer = (state = initialState, action) => {
       return {
         ...state,
         allCities: action.payload,
+      };
+    case "FUTURE_WEATHER":
+      return {
+        ...state,
+        futureWeather: action.payload,
       };
     default:
       return state;

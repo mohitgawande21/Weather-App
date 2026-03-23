@@ -20,7 +20,9 @@ function App() {
   const inputCityName = useSelector((state) => state.inputCity);
   const inputCityRef = React.useRef(inputCityName);
   inputCityRef.current = inputCityName;
-  const [currentCity, setCurrentCity] = useState("");
+  const [currentCity, setCurrentCity] = useState(
+    localStorage.getItem("city") || inputCityName || "",
+  );
   const onClickCity = useCallback(
     async (val) => {
       val?.length && dispatch(onSubmit(val));
@@ -28,7 +30,7 @@ function App() {
         ? val
         : inputCityRef.current?.length
           ? inputCityRef.current
-          : "";
+          : currentCity;
       try {
         const res = await fetch(
           `https://api.openweathermap.org/data/2.5/weather?q=${cityToFetch}&units=metric&APPID=${process.env.REACT_APP_WEATHER_API_KEY}`,
@@ -105,6 +107,7 @@ function App() {
             );
             const data = await res.json();
             setCityRes(data);
+            localStorage.setItem("city", data.name);
             setCurrentCity(data.name);
             setUrl(
               `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`,
@@ -148,7 +151,10 @@ function App() {
 
         fetchWeatherByCoords();
       },
-      (err) =>
+      (err) => {
+        if (localStorage.getItem("city")) {
+          onClickCity(currentCity);
+        }
         toast.error(`Geolocation error: ${err.message}`, {
           position: "top-center",
           autoClose: 1000,
@@ -158,7 +164,8 @@ function App() {
           draggable: true,
           progress: undefined,
           theme: "light",
-        }),
+        });
+      },
     );
   }, []);
 
