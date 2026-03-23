@@ -166,7 +166,7 @@ function App() {
         });
       },
     );
-  }, []);
+  }, [currentCity, onClickCity]);
 
   return (
     <>

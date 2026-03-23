@@ -22,12 +22,13 @@ export default function FiveDayForecast() {
       localStorage.setItem("city", id);
     }
   }, [id, city]);
+
   useEffect(() => {
     !city && localStorage.setItem("city", id);
     if (futureWeatherData?.city?.name !== id) {
       fetchForecast();
     }
-  }, [check, id]);
+  }, [check, id, city, futureWeatherData?.city?.name, fetchForecast]);
 
   async function fetchForecast() {
     try {
