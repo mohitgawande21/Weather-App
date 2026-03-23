@@ -17,7 +17,7 @@ export default function InputSuggest({ inputComp, inputCity, onClickCity }) {
     if (allCities.length === 0) {
       fetchAllCities();
     }
-  }, [allCities.length]);
+  }, [allCities.length, dispatch]);
 
   const memoizeFilterVal = useMemo(() => {
     const query = inputCity?.trim().toLowerCase();
@@ -48,7 +48,7 @@ export default function InputSuggest({ inputComp, inputCity, onClickCity }) {
       localStorage.setItem("city", suggestion[0]);
       onClickCity(suggestion[0]);
     }
-  }, [suggestion.length]);
+  }, [suggestion.length, onClickCity, suggestion]);
 
   return (
     <div className="my-3 w-100">

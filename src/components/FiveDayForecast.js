@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -17,6 +17,11 @@ export default function FiveDayForecast() {
   const futureWeatherData = useSelector((state) => state.futureWeather);
   const city = localStorage.getItem("city");
 
+  useLayoutEffect(() => {
+    if (id && id !== city) {
+      localStorage.setItem("city", id);
+    }
+  }, [id, city]);
   useEffect(() => {
     !city && localStorage.setItem("city", id);
     if (futureWeatherData?.city?.name !== id) {

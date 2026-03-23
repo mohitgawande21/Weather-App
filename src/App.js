@@ -1,17 +1,16 @@
 import Header from "./components/Header";
-// import WeatherCard from './components/WeatherCard'
 import React, { useEffect, useState, Suspense, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Footer from "./components/Footer";
 import { onSubmit } from "./Redux/ActionCreator";
-// import FiveDayForecast from './components/FiveDayForecast'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 const FiveDayForecastLazy = React.lazy(
   () => import("./components/FiveDayForecast"),
 );
 const WeatherCardLazy = React.lazy(() => import("./components/WeatherCard"));
+
 function App() {
   const dispatch = useDispatch();
   const [cityRes, setCityRes] = useState({});
@@ -78,7 +77,7 @@ function App() {
         console.log(err.message);
       }
     },
-    [dispatch],
+    [dispatch, currentCity],
   );
 
   useEffect(() => {
