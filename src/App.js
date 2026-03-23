@@ -22,6 +22,9 @@ function App() {
   const [currentCity, setCurrentCity] = useState(
     localStorage.getItem("city") || inputCityName || "",
   );
+  const currentCityRef = React.useRef(currentCity);
+  currentCityRef.current = currentCity;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const onClickCity = useCallback(
     async (val) => {
       val?.length && dispatch(onSubmit(val));
@@ -29,7 +32,7 @@ function App() {
         ? val
         : inputCityRef.current?.length
           ? inputCityRef.current
-          : currentCity;
+          : currentCityRef.current;
       try {
         const res = await fetch(
           `https://api.openweathermap.org/data/2.5/weather?q=${cityToFetch}&units=metric&APPID=${process.env.REACT_APP_WEATHER_API_KEY}`,
@@ -77,7 +80,7 @@ function App() {
         console.log(err.message);
       }
     },
-    [dispatch, currentCity],
+    [dispatch],
   );
 
   useEffect(() => {
@@ -166,7 +169,8 @@ function App() {
         });
       },
     );
-  }, [currentCity, onClickCity]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
