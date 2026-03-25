@@ -9,7 +9,7 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { ToastContainer } from "react-toastify";
 import InputSuggest from "./InputSuggest";
 import { Loader } from "./Loader";
-
+import { futureWeather } from "../Redux/ActionCreator";
 export default function WeatherCard({
   url,
   weatherData,
@@ -37,6 +37,7 @@ export default function WeatherCard({
 
   const changeUnit = () => {
     dispatch(onToggle(!check));
+    dispatch(futureWeather({}));
     if (check) {
       let d = weatherData?.main?.temp;
       setTemp(Math.floor(d));
