@@ -1,13 +1,13 @@
 import { useEffect, useLayoutEffect, useCallback } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
 import Card from "./Card";
 import { useDispatch } from "react-redux";
 import { futureWeather } from "../Redux/ActionCreator";
+import { toastNotify } from "../toast";
 export default function FiveDayForecast() {
-  // const [cityRes, setCityRes] = useState([]);
   const { id } = useParams();
   const dispatch = useDispatch();
   let check = useSelector((state) => {
@@ -28,9 +28,9 @@ export default function FiveDayForecast() {
       try {
         const apiKey = process.env.REACT_APP_WEATHER_API_KEY;
         if (!apiKey) {
-          toast.error(
+          toastNotify(
             "Missing API key: set REACT_APP_WEATHER_API_KEY in your .env",
-            { position: "top-center", autoClose: 3000 },
+            true,
           );
           return;
         }
@@ -40,27 +40,9 @@ export default function FiveDayForecast() {
         const data = await res.json();
         dispatch(futureWeather(data));
         if (data.cod === 404) {
-          toast.error("City Not Found", {
-            position: "top-center",
-            autoClose: 500,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
+          toastNotify("City Not Found", true);
         } else {
-          toast.success("Forecast Success!", {
-            position: "top-center",
-            autoClose: 1000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
+          toastNotify("Forecast Success!");
         }
       } catch (err) {
         console.log(err);

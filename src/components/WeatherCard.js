@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import "../../src/hover.css";
 import { onToggle } from "../Redux/ActionCreator";
 import { useDispatch } from "react-redux";
@@ -8,14 +8,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { ToastContainer } from "react-toastify";
 import InputSuggest from "./InputSuggest";
+
 export default function WeatherCard({
-  inputCityName,
   url,
-  cityRes,
-  onClickCity,
+  weatherData,
   loading,
+  onCityFetchWeather,
 }) {
-  console.log("weathercard", cityRes);
+  console.log("weathercard", weatherData);
   const dispatch = useDispatch();
 
   const [temp, setTemp] = useState(0);
@@ -26,21 +26,21 @@ export default function WeatherCard({
 
   useEffect(() => {
     if (!check) {
-      let d = cityRes?.main?.temp;
+      let d = weatherData?.main?.temp;
       setTemp(Math.floor(d));
     } else {
-      let f = cityRes?.main?.temp * (9 / 5) + 32;
+      let f = weatherData?.main?.temp * (9 / 5) + 32;
       setTemp(Math.floor(f));
     }
-  }, [cityRes?.main?.temp, check]);
+  }, [weatherData?.main?.temp, check]);
 
   const changeUnit = () => {
     dispatch(onToggle(!check));
     if (check) {
-      let d = cityRes?.main?.temp;
+      let d = weatherData?.main?.temp;
       setTemp(Math.floor(d));
     } else {
-      let f = cityRes?.main?.temp * (9 / 5) + 32;
+      let f = weatherData?.main?.temp * (9 / 5) + 32;
       setTemp(Math.floor(f));
     }
   };
@@ -54,6 +54,8 @@ export default function WeatherCard({
   const inputIconStyle = {
     position: "relative",
   };
+
+  console.log("weatherData", weatherData);
   return (
     <>
       <div className="my-3">
@@ -64,7 +66,7 @@ export default function WeatherCard({
           <div className="my-3 flex-wrap d-flex justify-content-center align-items-center">
             <div style={inputIconStyle}>
               <InputSuggest
-                onClickCity={onClickCity}
+                onCityFetchWeather={onCityFetchWeather}
                 inputCity={inputCity.current.value}
                 inputComp={
                   <input
@@ -80,7 +82,7 @@ export default function WeatherCard({
               {inputCity?.current?.value?.length ? (
                 <div
                   style={serachIconStyle}
-                  onClick={onClickCity}
+                  onClick={() => onCityFetchWeather(inputCity.current.value)}
                   className="mx-1"
                   type="submit"
                 >
@@ -94,7 +96,7 @@ export default function WeatherCard({
         </div>
       </div>
       <div className="d-flex justify-content-center  my-5 ">
-        {loading && !cityRes ? (
+        {loading && !weatherData ? (
           <div
             className="card mb-3 bg-light shadow d-flex justify-content-center align-items-center"
             style={{ width: "500px", height: "200px" }}
@@ -112,7 +114,8 @@ export default function WeatherCard({
               <div className="col-md-8">
                 <div className="card-body">
                   <h5 className="card-title text">
-                    {temp ? temp : cityRes?.main?.temp} {!check ? "°C" : "°F"}
+                    {temp ? temp : weatherData?.main?.temp}{" "}
+                    {!check ? "°C" : "°F"}
                     <span className=" mx-2 form-switch">
                       <input
                         checked={check}
@@ -122,8 +125,8 @@ export default function WeatherCard({
                       />
                     </span>
                   </h5>
-                  {cityRes?.main?.temp && (
-                    <h5 className="card-title text">{cityRes.name}</h5>
+                  {weatherData && (
+                    <h5 className="card-title text">{weatherData.name}</h5>
                   )}
                   <p className="card-text">
                     <small className="text-muted">
@@ -131,7 +134,9 @@ export default function WeatherCard({
                     </small>
                   </p>
                   <p className="card-text">
-                    {cityRes?.main?.temp ? cityRes.weather[0].description : ""}
+                    {weatherData?.main?.temp
+                      ? weatherData.weather[0].description
+                      : ""}
                   </p>
                 </div>
               </div>

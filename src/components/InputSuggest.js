@@ -1,7 +1,11 @@
 import { useState, useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { saveAllCities } from "../Redux/ActionCreator";
-export default function InputSuggest({ inputComp, inputCity, onClickCity }) {
+export default function InputSuggest({
+  inputComp,
+  inputCity,
+  onCityFetchWeather,
+}) {
   const [suggestion, setSuggestion] = useState([]);
   const [selectedCity, setSelectedCity] = useState("");
   const dispatch = useDispatch();
@@ -46,9 +50,9 @@ export default function InputSuggest({ inputComp, inputCity, onClickCity }) {
   useEffect(() => {
     if (suggestion?.length === 1) {
       localStorage.setItem("city", suggestion[0]);
-      onClickCity(suggestion[0]);
+      onCityFetchWeather(suggestion[0]);
     }
-  }, [suggestion.length, onClickCity, suggestion]);
+  }, [suggestion.length, onCityFetchWeather, suggestion]);
 
   return (
     <div className="my-3 w-100">
@@ -59,7 +63,7 @@ export default function InputSuggest({ inputComp, inputCity, onClickCity }) {
           onChange={(e) => {
             localStorage.setItem("city", e.target.value);
             setSelectedCity(e.target.value);
-            onClickCity(e.target.value);
+            onCityFetchWeather(e.target.value);
           }}
           value={selectedCity}
         >

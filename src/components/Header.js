@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import "../hover.css";
 const banner = "https://d3vgbv6p5fstcv.cloudfront.net/assets/background.jpg";
 const logo = "https://d3vgbv6p5fstcv.cloudfront.net/assets/logo.png";
-export default function Header({ inputCityName }) {
+export default function Header({ currentCity }) {
   const imgStyle = {
     position: "fixed",
     width: "100%",
@@ -27,7 +27,7 @@ export default function Header({ inputCityName }) {
               />
             </div>
           </Link>
-          <Link className="text-info mx-3 " to={`/${inputCityName}`}>
+          <Link className="text-info mx-3 " to={`/${currentCity}`}>
             <div className="container">
               <span>Full Day Forecast</span>
             </div>

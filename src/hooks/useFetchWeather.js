@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { toast } from "react-toastify";
+import { toastNotify } from "../toast";
 const useFetchWeather = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -34,49 +34,13 @@ const useFetchWeather = () => {
       const fetchedData = await res.json();
       console.log("Fetched weather data:", fetchedData);
       if (fetchedData?.cod === 200) {
-        toast.success("Weather Success!", {
-          position: "top-center",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toastNotify("Weather Success!");
       } else if (fetchedData?.cod === "404") {
-        toast.error("City Not Found", {
-          position: "top-center",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toastNotify("City Not Found", true);
       } else if (fetchedData?.cod === "400") {
-        toast.error("Invalid coordinates", {
-          position: "top-center",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toastNotify("Invalid coordinates", true);
       } else {
-        toast.error("Weather data unavailable for your location", {
-          position: "top-center",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toastNotify("Weather data unavailable for your location", true);
       }
       setData(fetchedData);
       return fetchedData;

@@ -6,7 +6,8 @@ import "react-toastify/dist/ReactToastify.css";
 import Footer from "./components/Footer";
 import { onSubmit } from "./Redux/ActionCreator";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import useFetchWeather from "./api/useFetchWeather";
+import useFetchWeather from "./hooks/useFetchWeather";
+import { toastNotify } from "./toast";
 const FiveDayForecastLazy = React.lazy(
   () => import("./components/FiveDayForecast"),
 );
@@ -14,16 +15,13 @@ const WeatherCardLazy = React.lazy(() => import("./components/WeatherCard"));
 
 function App() {
   const dispatch = useDispatch();
-  const [url, setUrl] = useState("");
 
-  const inputCityName = useSelector((state) => state.inputCity);
-  const inputCityRef = React.useRef(inputCityName);
-  inputCityRef.current = inputCityName;
+  const [url, setUrl] = useState("");
+  const reduxCity = useSelector((state) => state.inputCity);
+
   const [currentCity, setCurrentCity] = useState(
-    localStorage.getItem("city") || inputCityName || "",
+    localStorage.getItem("city") || reduxCity || "",
   );
-  const currentCityRef = React.useRef(currentCity);
-  currentCityRef.current = currentCity;
 
   const {
     data: weatherData,
@@ -32,41 +30,30 @@ function App() {
     callApiEndPoint,
   } = useFetchWeather();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const onClickCity = useCallback(
-    async (val) => {
-      val?.length && dispatch(onSubmit(val));
-      const cityToFetch = val?.length
-        ? val
-        : inputCityRef.current?.length
-          ? inputCityRef.current
-          : currentCityRef.current;
+
+  const onCityFetchWeather = useCallback(
+    async (cityName) => {
       try {
         const data = await callApiEndPoint(
-          `https://api.openweathermap.org/data/2.5/weather?q=${cityToFetch}&units=metric&APPID=${process.env.REACT_APP_WEATHER_API_KEY}`,
+          `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=metric&APPID=${process.env.REACT_APP_WEATHER_API_KEY}`,
         );
+        cityName?.length && dispatch(onSubmit(cityName));
         setCurrentCity(data.name);
         setUrl(
           `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`,
         );
+        console.log("Fetched data in WeatherCard:", data); // Debug log
       } catch (err) {
         console.error("Weather fetch error:", err);
+        // Optionally show toast here if needed
       }
     },
-    [dispatch],
+    [dispatch, setCurrentCity, setUrl],
   );
 
   useEffect(() => {
     if (!navigator.geolocation) {
-      toast.error("Geolocation is not supported by your browser", {
-        position: "top-center",
-        autoClose: 1000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toastNotify("Geolocation is not supported by your browser", true);
       return;
     }
 
@@ -93,18 +80,12 @@ function App() {
       },
       (err) => {
         if (localStorage.getItem("city")) {
-          onClickCity(currentCity);
+          onCityFetchWeather(currentCity);
         }
-        toast.error(`Geolocation error: ${err.message}`, {
-          position: "top-center",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toastNotify(
+          "Unable to retrieve your location. Please enter your city manually.",
+          true,
+        );
       },
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -114,7 +95,7 @@ function App() {
     <>
       <Router>
         <div className="App">
-          <Header inputCityName={currentCity} />
+          <Header currentCity={currentCity} />
           <Routes>
             <Route
               path="/"
@@ -132,11 +113,10 @@ function App() {
                   }
                 >
                   <WeatherCardLazy
-                    onClickCity={onClickCity}
-                    inputCityName={currentCity}
-                    cityRes={weatherData}
+                    weatherData={weatherData}
                     url={url}
                     loading={weatherLoading}
+                    onCityFetchWeather={onCityFetchWeather}
                   />
                 </Suspense>
               }
