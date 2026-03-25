@@ -33,11 +33,11 @@ const useFetchWeather = () => {
       const res = await fetch(url, requestBody);
       const fetchedData = await res.json();
       console.log("Fetched weather data:", fetchedData);
-      if (fetchedData?.cod === 200) {
+      if (Number(fetchedData?.cod) === 200) {
         toastNotify("Weather Success!");
-      } else if (fetchedData?.cod === "404") {
+      } else if (Number(fetchedData?.cod) === 404) {
         toastNotify("City Not Found", true);
-      } else if (fetchedData?.cod === "400") {
+      } else if (Number(fetchedData?.cod) === 400) {
         toastNotify("Invalid coordinates", true);
       } else {
         toastNotify("Weather data unavailable for your location", true);

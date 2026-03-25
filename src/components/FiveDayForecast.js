@@ -7,6 +7,7 @@ import Card from "./Card";
 import { useDispatch } from "react-redux";
 import { futureWeather } from "../Redux/ActionCreator";
 import { toastNotify } from "../toast";
+import useFetchWeather from "../hooks/useFetchWeather";
 export default function FiveDayForecast() {
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -16,6 +17,7 @@ export default function FiveDayForecast() {
 
   const futureWeatherData = useSelector((state) => state.futureWeather);
   const city = localStorage.getItem("city");
+  const { callApiEndPoint } = useFetchWeather();
 
   useLayoutEffect(() => {
     if (id && id !== city) {
@@ -34,16 +36,10 @@ export default function FiveDayForecast() {
           );
           return;
         }
-        const res = await fetch(
+        const data = await callApiEndPoint(
           `https://api.openweathermap.org/data/2.5/forecast?q=${id}&${!check ? "units=metric" : "units=imperial"}&appid=${apiKey}&cnt=5`,
         );
-        const data = await res.json();
         dispatch(futureWeather(data));
-        if (data.cod === 404) {
-          toastNotify("City Not Found", true);
-        } else {
-          toastNotify("Forecast Success!");
-        }
       } catch (err) {
         console.log(err);
       }
