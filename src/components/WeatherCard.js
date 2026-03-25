@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import "../../src/hover.css";
 import { onToggle } from "../Redux/ActionCreator";
 import { useDispatch } from "react-redux";
@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { ToastContainer } from "react-toastify";
 import InputSuggest from "./InputSuggest";
+import { Loader } from "./Loader";
 
 export default function WeatherCard({
   url,
@@ -97,14 +98,7 @@ export default function WeatherCard({
       </div>
       <div className="d-flex justify-content-center  my-5 ">
         {loading && !weatherData ? (
-          <div
-            className="card mb-3 bg-light shadow d-flex justify-content-center align-items-center"
-            style={{ width: "500px", height: "200px" }}
-          >
-            <div className="spinner-border text-primary" role="status">
-              <span className="visually-hidden">Loading weather data...</span>
-            </div>
-          </div>
+          <Loader />
         ) : (
           <div className="card mb-3 bg-light shadow" style={{ width: "500px" }}>
             <div className="row g-0">

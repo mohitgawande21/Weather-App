@@ -1,13 +1,13 @@
 import Header from "./components/Header";
 import React, { useEffect, useState, Suspense, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Footer from "./components/Footer";
 import { onSubmit } from "./Redux/ActionCreator";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import useFetchWeather from "./hooks/useFetchWeather";
 import { toastNotify } from "./toast";
+import { Loader } from "./components/Loader";
 const FiveDayForecastLazy = React.lazy(
   () => import("./components/FiveDayForecast"),
 );
@@ -25,11 +25,9 @@ function App() {
 
   const {
     data: weatherData,
-    error: weatherError,
     loading: weatherLoading,
     callApiEndPoint,
   } = useFetchWeather();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
 
   const onCityFetchWeather = useCallback(
     async (cityName) => {
@@ -48,6 +46,7 @@ function App() {
         // Optionally show toast here if needed
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [dispatch, setCurrentCity, setUrl],
   );
 
@@ -100,18 +99,7 @@ function App() {
             <Route
               path="/"
               element={
-                <Suspense
-                  fallback={
-                    <div className="d-flex justify-content-center m-5">
-                      <div
-                        className="spinner-border text-warning m-5"
-                        role="status"
-                      >
-                        <span className="visually-hidden">Loading...</span>
-                      </div>
-                    </div>
-                  }
-                >
+                <Suspense fallback={<Loader />}>
                   <WeatherCardLazy
                     weatherData={weatherData}
                     url={url}
@@ -124,18 +112,7 @@ function App() {
             <Route
               path="/:id"
               element={
-                <Suspense
-                  fallback={
-                    <div className="d-flex justify-content-center m-5">
-                      <div
-                        className="spinner-border text-warning m-5"
-                        role="status"
-                      >
-                        <span className="visually-hidden">Loading...</span>
-                      </div>
-                    </div>
-                  }
-                >
+                <Suspense fallback={<Loader />}>
                   <FiveDayForecastLazy />{" "}
                 </Suspense>
               }
