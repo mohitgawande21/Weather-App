@@ -29,7 +29,7 @@ export default function Header({ inputCityName }) {
           </Link>
           <Link className="text-info mx-3 " to={`/${inputCityName}`}>
             <div className="container">
-              <span>Future Time's Forecast</span>
+              <span>Full Day Forecast</span>
             </div>
           </Link>
         </div>

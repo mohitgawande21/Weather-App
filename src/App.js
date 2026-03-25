@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Footer from "./components/Footer";
 import { onSubmit } from "./Redux/ActionCreator";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import useFetchWeather from "./api/useFetchWeather";
 const FiveDayForecastLazy = React.lazy(
   () => import("./components/FiveDayForecast"),
 );
@@ -13,7 +14,6 @@ const WeatherCardLazy = React.lazy(() => import("./components/WeatherCard"));
 
 function App() {
   const dispatch = useDispatch();
-  const [cityRes, setCityRes] = useState({});
   const [url, setUrl] = useState("");
 
   const inputCityName = useSelector((state) => state.inputCity);
@@ -24,6 +24,13 @@ function App() {
   );
   const currentCityRef = React.useRef(currentCity);
   currentCityRef.current = currentCity;
+
+  const {
+    data: weatherData,
+    error: weatherError,
+    loading: weatherLoading,
+    callApiEndPoint,
+  } = useFetchWeather();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const onClickCity = useCallback(
     async (val) => {
@@ -34,50 +41,15 @@ function App() {
           ? inputCityRef.current
           : currentCityRef.current;
       try {
-        const res = await fetch(
+        const data = await callApiEndPoint(
           `https://api.openweathermap.org/data/2.5/weather?q=${cityToFetch}&units=metric&APPID=${process.env.REACT_APP_WEATHER_API_KEY}`,
         );
-        const data = await res.json();
-        setCityRes(data);
         setCurrentCity(data.name);
         setUrl(
           `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`,
         );
-        if (data.cod === 404) {
-          toast.error("City Not Found", {
-            position: "top-center",
-            autoClose: 1000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
-        } else {
-          toast.success("Weather Success!", {
-            position: "top-center",
-            autoClose: 1000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
-        }
       } catch (err) {
-        toast.error("City Not Found", {
-          position: "top-center",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        console.log(err.message);
+        console.error("Weather fetch error:", err);
       }
     },
     [dispatch],
@@ -104,50 +76,16 @@ function App() {
         const { latitude, longitude } = position.coords;
         const fetchWeatherByCoords = async () => {
           try {
-            const res = await fetch(
+            const data = await callApiEndPoint(
               `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&APPID=${process.env.REACT_APP_WEATHER_API_KEY}`,
             );
-            const data = await res.json();
-            setCityRes(data);
             localStorage.setItem("city", data.name);
             setCurrentCity(data.name);
             setUrl(
               `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`,
             );
-            if (data.cod === 400) {
-              toast.error("wrong latitude or longitude", {
-                position: "top-center",
-                autoClose: 1000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-              });
-            } else {
-              toast.success("Weather Success!", {
-                position: "top-center",
-                autoClose: 1000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-              });
-            }
           } catch (err) {
-            toast.error("Wrong Latitude or Longitude", {
-              position: "top-center",
-              autoClose: 1000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-            });
+            console.error("Geolocation weather fetch error:", err);
           }
         };
 
@@ -196,8 +134,9 @@ function App() {
                   <WeatherCardLazy
                     onClickCity={onClickCity}
                     inputCityName={currentCity}
-                    cityRes={cityRes}
+                    cityRes={weatherData}
                     url={url}
+                    loading={weatherLoading}
                   />
                 </Suspense>
               }

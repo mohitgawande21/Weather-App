@@ -13,7 +13,9 @@ export default function WeatherCard({
   url,
   cityRes,
   onClickCity,
+  loading,
 }) {
+  console.log("weathercard", cityRes);
   const dispatch = useDispatch();
 
   const [temp, setTemp] = useState(0);
@@ -92,39 +94,50 @@ export default function WeatherCard({
         </div>
       </div>
       <div className="d-flex justify-content-center  my-5 ">
-        <div className="card mb-3 bg-light shadow" style={{ width: "500px" }}>
-          <div className="row g-0">
-            <div className="col-md-4 d-flex justify-content-center bg-light shadow ">
-              <img src={url} alt={url} className="img-fluid rounded-start" />
+        {loading && !cityRes ? (
+          <div
+            className="card mb-3 bg-light shadow d-flex justify-content-center align-items-center"
+            style={{ width: "500px", height: "200px" }}
+          >
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Loading weather data...</span>
             </div>
-            <div className="col-md-8">
-              <div className="card-body">
-                <h5 className="card-title text">
-                  {temp ? temp : cityRes?.main?.temp} {!check ? "°C" : "°F"}
-                  <span className=" mx-2 form-switch">
-                    <input
-                      checked={check}
-                      onChange={changeUnit}
-                      className="form-check-input"
-                      type="checkbox"
-                    />
-                  </span>
-                </h5>
-                {cityRes?.main?.temp && (
-                  <h5 className="card-title text">{inputCityName}</h5>
-                )}
-                <p className="card-text">
-                  <small className="text-muted">
-                    {new Date().toLocaleString("en-us", { weekday: "long" })}
-                  </small>
-                </p>
-                <p className="card-text">
-                  {cityRes?.main?.temp ? cityRes.weather[0].description : ""}
-                </p>
+          </div>
+        ) : (
+          <div className="card mb-3 bg-light shadow" style={{ width: "500px" }}>
+            <div className="row g-0">
+              <div className="col-md-4 d-flex justify-content-center bg-light shadow ">
+                <img src={url} alt={url} className="img-fluid rounded-start" />
+              </div>
+              <div className="col-md-8">
+                <div className="card-body">
+                  <h5 className="card-title text">
+                    {temp ? temp : cityRes?.main?.temp} {!check ? "°C" : "°F"}
+                    <span className=" mx-2 form-switch">
+                      <input
+                        checked={check}
+                        onChange={changeUnit}
+                        className="form-check-input"
+                        type="checkbox"
+                      />
+                    </span>
+                  </h5>
+                  {cityRes?.main?.temp && (
+                    <h5 className="card-title text">{cityRes.name}</h5>
+                  )}
+                  <p className="card-text">
+                    <small className="text-muted">
+                      {new Date().toLocaleString("en-us", { weekday: "long" })}
+                    </small>
+                  </p>
+                  <p className="card-text">
+                    {cityRes?.main?.temp ? cityRes.weather[0].description : ""}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </>
   );
