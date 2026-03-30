@@ -9,7 +9,6 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { ToastContainer } from "react-toastify";
 import InputSuggest from "./InputSuggest";
 import { HomeCard } from "./HomeCard";
-import useFetchWeather from "../hooks/useFetchWeather";
 export default function WeatherCard({
   url,
   weatherData,
