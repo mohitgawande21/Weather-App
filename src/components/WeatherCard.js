@@ -61,7 +61,7 @@ export default function WeatherCard({
   console.log("weatherData", weatherData);
   return (
     <>
-      <div className="my-3">
+      <div className="my-2">
         <ToastContainer />
         <br />
         <br />

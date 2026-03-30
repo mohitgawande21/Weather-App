@@ -61,7 +61,7 @@ const Timeline = ({ check }) => {
         {timelineData?.timeline?.map((item, index) => (
           <div
             key={index}
-            className="d-flex flex-column mb-1 p-1 rounded shadow-sm border bg-white"
+            className="d-flex flex-column mb-1 p-1 rounded shadow-sm border bg-light"
           >
             <span
               className="text-secondary mb-1"

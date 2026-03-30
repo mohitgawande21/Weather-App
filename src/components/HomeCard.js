@@ -13,13 +13,13 @@ export const HomeCard = ({
   console.log("homecard", weatherData);
   return (
     <>
-      <div className="d-flex justify-content-center  my-5 ">
+      <div className="d-flex justify-content-center  my-3 ">
         {loading && !weatherData ? (
           <Loader />
         ) : (
-          <div className="card mb-3 bg-light shadow" style={{ width: "500px" }}>
+          <div className="card mb-5 bg-light shadow" style={{ width: "500px" }}>
             <div className="row g-0">
-              <div className="bg-light shadow ">
+              <div className="bg-info bg-gradient shadow">
                 <div className="d-flex align-items-center justify-content-between p-3">
                   <div className="">
                     <h5 className="card-title text">
