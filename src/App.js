@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import useFetchWeather from "./hooks/useFetchWeather";
 import { toastNotify } from "./toast";
 import { Loader } from "./components/Loader";
+import { futureWeather } from "../src/Redux/ActionCreator";
 const FiveDayForecastLazy = React.lazy(
   () => import("./components/FiveDayForecast"),
 );
@@ -15,19 +16,40 @@ const WeatherCardLazy = React.lazy(() => import("./components/WeatherCard"));
 
 function App() {
   const dispatch = useDispatch();
-
+  const [weatherData, setWeatherData] = useState(null);
   const [url, setUrl] = useState("");
   const reduxCity = useSelector((state) => state.inputCity);
-
+  let check = useSelector((state) => {
+    return state.Check;
+  });
   const [currentCity, setCurrentCity] = useState(
     localStorage.getItem("city") || reduxCity || "",
   );
 
-  const {
-    data: weatherData,
-    loading: weatherLoading,
-    callApiEndPoint,
-  } = useFetchWeather();
+  const { data, loading: weatherLoading, callApiEndPoint } = useFetchWeather();
+
+  const fetchForecast = useCallback(
+    async function (cityname) {
+      try {
+        const apiKey = process.env.REACT_APP_WEATHER_API_KEY;
+        if (!apiKey) {
+          toastNotify(
+            "Missing API key: set REACT_APP_WEATHER_API_KEY in your .env",
+            true,
+          );
+          return;
+        }
+        const data = await callApiEndPoint(
+          `https://api.openweathermap.org/data/2.5/forecast?q=${cityname}&${!check ? "units=metric" : "units=imperial"}&appid=${apiKey}&cnt=5`,
+        );
+        dispatch(futureWeather(data));
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [dispatch, currentCity, check],
+  );
 
   const onCityFetchWeather = useCallback(
     async (cityName) => {
@@ -35,8 +57,10 @@ function App() {
         const data = await callApiEndPoint(
           `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=metric&APPID=${process.env.REACT_APP_WEATHER_API_KEY}`,
         );
+        setWeatherData(data);
         cityName?.length && dispatch(onSubmit(cityName));
         setCurrentCity(data.name);
+        fetchForecast(cityName);
         setUrl(
           `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`,
         );
@@ -65,8 +89,10 @@ function App() {
             const data = await callApiEndPoint(
               `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&APPID=${process.env.REACT_APP_WEATHER_API_KEY}`,
             );
+            setWeatherData(data);
             localStorage.setItem("city", data.name);
             setCurrentCity(data.name);
+            fetchForecast(data.name);
             setUrl(
               `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`,
             );

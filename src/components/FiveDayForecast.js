@@ -25,36 +25,6 @@ export default function FiveDayForecast() {
     }
   }, [id, city]);
 
-  const fetchForecast = useCallback(
-    async function () {
-      try {
-        const apiKey = process.env.REACT_APP_WEATHER_API_KEY;
-        if (!apiKey) {
-          toastNotify(
-            "Missing API key: set REACT_APP_WEATHER_API_KEY in your .env",
-            true,
-          );
-          return;
-        }
-        const data = await callApiEndPoint(
-          `https://api.openweathermap.org/data/2.5/forecast?q=${id}&${!check ? "units=metric" : "units=imperial"}&appid=${apiKey}&cnt=5`,
-        );
-        dispatch(futureWeather(data));
-      } catch (err) {
-        console.log(err);
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [dispatch, id, check],
-  );
-
-  useEffect(() => {
-    !city && localStorage.setItem("city", id);
-    if (futureWeatherData?.city?.name !== id) {
-      fetchForecast();
-    }
-  }, [check, id, city, futureWeatherData?.city?.name, fetchForecast]);
-
   return (
     <>
       <br />
@@ -63,12 +33,20 @@ export default function FiveDayForecast() {
       <h4 className="text-center my-3">City - {id}</h4>
       <div className="d-flex flex-wrap justify-content-center my-3">
         {futureWeatherData?.list?.map((item, ind) => {
+          let temp;
+          if (!check) {
+            let d = item?.main?.temp;
+            temp = Math.floor(d);
+          } else {
+            let f = item?.main?.temp * (9 / 5) + 32;
+            temp = Math.floor(f);
+          }
           return (
             <Card
               key={ind}
               time={item.dt * 1000}
               url={`https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`}
-              temperature={item?.main?.temp}
+              temperature={check ? `${temp}°F` : `${temp}°C`}
               description={item.weather[0].description}
               check={check}
             />

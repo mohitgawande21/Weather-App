@@ -8,8 +8,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { ToastContainer } from "react-toastify";
 import InputSuggest from "./InputSuggest";
-import { Loader } from "./Loader";
+import { HomeCard } from "./HomeCard";
 import { futureWeather } from "../Redux/ActionCreator";
+import useFetchWeather from "../hooks/useFetchWeather";
 export default function WeatherCard({
   url,
   weatherData,
@@ -18,7 +19,7 @@ export default function WeatherCard({
 }) {
   console.log("weathercard", weatherData);
   const dispatch = useDispatch();
-
+  const { callApiEndPoint } = useFetchWeather();
   const [temp, setTemp] = useState(0);
 
   let check = useSelector((state) => {
@@ -37,7 +38,7 @@ export default function WeatherCard({
 
   const changeUnit = () => {
     dispatch(onToggle(!check));
-    dispatch(futureWeather({}));
+    // dispatch(futureWeather({}));
     if (check) {
       let d = weatherData?.main?.temp;
       setTemp(Math.floor(d));
@@ -64,81 +65,45 @@ export default function WeatherCard({
         <ToastContainer />
         <br />
         <br />
-        <div>
-          <div className="my-3 flex-wrap d-flex justify-content-center align-items-center">
-            <div style={inputIconStyle}>
-              <InputSuggest
-                onCityFetchWeather={onCityFetchWeather}
-                inputCity={inputCity.current.value}
-                inputComp={
-                  <input
-                    className="form-control w-120"
-                    onChange={(e) => {
-                      dispatch(onSubmit(inputCity.current.value));
-                    }}
-                    ref={inputCity}
-                    placeholder="Enter city name"
-                  />
-                }
-              />
-              {inputCity?.current?.value?.length ? (
-                <div
-                  style={serachIconStyle}
-                  onClick={() => onCityFetchWeather(inputCity.current.value)}
-                  className="mx-1"
-                  type="submit"
-                >
-                  <FontAwesomeIcon icon={faSearch} />
-                </div>
-              ) : (
-                ""
-              )}
-            </div>
+        <div className="my-3 flex-wrap d-flex justify-content-center align-items-center">
+          <div style={inputIconStyle}>
+            <InputSuggest
+              onCityFetchWeather={onCityFetchWeather}
+              inputCity={inputCity.current.value}
+              inputComp={
+                <input
+                  className="form-control w-120"
+                  onChange={(e) => {
+                    dispatch(onSubmit(inputCity.current.value));
+                  }}
+                  ref={inputCity}
+                  placeholder="Enter city name"
+                />
+              }
+            />
+            {inputCity?.current?.value?.length ? (
+              <div
+                style={serachIconStyle}
+                onClick={() => onCityFetchWeather(inputCity.current.value)}
+                className="mx-1"
+                type="submit"
+              >
+                <FontAwesomeIcon icon={faSearch} />
+              </div>
+            ) : (
+              ""
+            )}
           </div>
         </div>
       </div>
-      <div className="d-flex justify-content-center  my-5 ">
-        {loading && !weatherData ? (
-          <Loader />
-        ) : (
-          <div className="card mb-3 bg-light shadow" style={{ width: "500px" }}>
-            <div className="row g-0">
-              <div className="col-md-4 d-flex justify-content-center bg-light shadow ">
-                <img src={url} alt={url} className="img-fluid rounded-start" />
-              </div>
-              <div className="col-md-8">
-                <div className="card-body">
-                  <h5 className="card-title text">
-                    {temp ? temp : weatherData?.main?.temp}{" "}
-                    {!check ? "°C" : "°F"}
-                    <span className=" mx-2 form-switch">
-                      <input
-                        checked={check}
-                        onChange={changeUnit}
-                        className="form-check-input"
-                        type="checkbox"
-                      />
-                    </span>
-                  </h5>
-                  {weatherData && (
-                    <h5 className="card-title text">{weatherData.name}</h5>
-                  )}
-                  <p className="card-text">
-                    <small className="text-muted">
-                      {new Date().toLocaleString("en-us", { weekday: "long" })}
-                    </small>
-                  </p>
-                  <p className="card-text">
-                    {weatherData?.main?.temp
-                      ? weatherData.weather[0].description
-                      : ""}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+      <HomeCard
+        temp={temp}
+        check={check}
+        weatherData={weatherData}
+        url={url}
+        loading={loading}
+        changeUnit={changeUnit}
+      />
     </>
   );
 }

@@ -5,12 +5,10 @@ const Card = memo(({ time, url, temperature, description, check }) => {
     <>
       <div className=" mx-1 card  m-auto my-1  bg-light bg-gradient ">
         <div className="card-body text-center shadow ">
-          <h6 className="card-text">{new Date(time).toUTCString()}</h6>
+          <h6 className="card-text">{new Date(time).toDateString()}</h6>
           <img alt={description} src={url} />
           <div>
-            <strong className="card-text">
-              {temperature} {check ? "°F" : "°C"}
-            </strong>
+            <strong className="card-text">{temperature}</strong>
           </div>
           <div>
             <strong className="card-text">{description}</strong>
