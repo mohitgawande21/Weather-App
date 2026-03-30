@@ -4,9 +4,6 @@ import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
 import Card from "./Card";
-import { useDispatch } from "react-redux";
-
-import useFetchWeather from "../hooks/useFetchWeather";
 export default function FiveDayForecast() {
   const { id } = useParams();
   let check = useSelector((state) => {
