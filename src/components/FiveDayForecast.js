@@ -1,23 +1,20 @@
-import { useEffect, useLayoutEffect, useCallback } from "react";
+import { useLayoutEffect } from "react";
 import { ToastContainer } from "react-toastify";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
 import Card from "./Card";
 import { useDispatch } from "react-redux";
-import { futureWeather } from "../Redux/ActionCreator";
-import { toastNotify } from "../toast";
+
 import useFetchWeather from "../hooks/useFetchWeather";
 export default function FiveDayForecast() {
   const { id } = useParams();
-  const dispatch = useDispatch();
   let check = useSelector((state) => {
     return state.Check;
   });
 
   const futureWeatherData = useSelector((state) => state.futureWeather);
   const city = localStorage.getItem("city");
-  const { callApiEndPoint } = useFetchWeather();
 
   useLayoutEffect(() => {
     if (id && id !== city) {

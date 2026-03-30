@@ -26,7 +26,7 @@ function App() {
     localStorage.getItem("city") || reduxCity || "",
   );
 
-  const { data, loading: weatherLoading, callApiEndPoint } = useFetchWeather();
+  const { loading: weatherLoading, callApiEndPoint } = useFetchWeather();
 
   const fetchForecast = useCallback(
     async function (cityname) {

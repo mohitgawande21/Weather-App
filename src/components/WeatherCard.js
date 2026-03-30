@@ -9,7 +9,6 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { ToastContainer } from "react-toastify";
 import InputSuggest from "./InputSuggest";
 import { HomeCard } from "./HomeCard";
-import { futureWeather } from "../Redux/ActionCreator";
 import useFetchWeather from "../hooks/useFetchWeather";
 export default function WeatherCard({
   url,
@@ -19,7 +18,6 @@ export default function WeatherCard({
 }) {
   console.log("weathercard", weatherData);
   const dispatch = useDispatch();
-  const { callApiEndPoint } = useFetchWeather();
   const [temp, setTemp] = useState(0);
 
   let check = useSelector((state) => {
