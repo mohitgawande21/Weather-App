@@ -18,19 +18,16 @@ export default function Header({ currentCity }) {
         <div className="d-flex align-items-center fixed-top bg-dark ">
           <Link className=" text-info mx-3 ml-3  " to="/">
             <div className="img-zoom-container">
-              <img
-                className="img-fluid"
-                alt="logo"
-                src={logo}
-                width="50px"
-                height="50px"
-              />
+              <img className="img-fluid" alt="logo" src={logo} width="50px" />
             </div>
           </Link>
-          <Link className="text-info mx-3 " to={`/${currentCity}`}>
-            <div className="container">
-              <span>Full Day Forecast</span>
-            </div>
+          <Link
+            className="nav-link link-info mx-3 d-inline-flex align-items-center fw-semibold text-decoration-none custom-hover-link"
+            to={`/${currentCity}`}
+          >
+            <span className="border-bottom border-info border-2 pb-1">
+              Full Day Forecast
+            </span>
           </Link>
         </div>
       </div>

@@ -4,7 +4,7 @@ export default function footer() {
   return (
     <div>
       <footer className="my-5">
-        <div className="bg-light bg-gradient fixed-bottom py-2 d-flex align-items-center justify-content-center">
+        <div className="bg-light bg-gradient fixed-bottom py-1 d-flex align-items-center justify-content-center">
           <span>© 2022 Mohit Gawande</span>
           <a
             target="_blank"

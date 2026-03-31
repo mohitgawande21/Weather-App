@@ -38,7 +38,10 @@ const Timeline = ({ check }) => {
         return {
           slot,
           date: new Date(item.dt_txt.split(" ")[0]).toDateString(),
-          time: item.dt_txt.split(" ")[1].slice(0, 5),
+          time:
+            Number(item.dt_txt.split(" ")[1].slice(0, 2)) >= 12
+              ? `${String(Number(item.dt_txt.split(" ")[1].slice(0, 2)) % 12 || 12).padStart(2, "0")}:${item.dt_txt.split(" ")[1].slice(3, 5)} PM`
+              : `${String(Number(item.dt_txt.split(" ")[1].slice(0, 2)) || 12).padStart(2, "0")}:${item.dt_txt.split(" ")[1].slice(3, 5)} AM`,
           temp,
           feels_like: item.main.feels_like,
           weather,
@@ -55,8 +58,8 @@ const Timeline = ({ check }) => {
 
   console.log("processed timeline data", timelineData);
   return (
-    <div className="mt-2 d-flex flex-column align-items-center">
-      <h5 className="mb-1 text-center">Daily Weather Timeline</h5>
+    <div className="mt-2 d-flex flex-column align-items-center p-1">
+      <h6 className="mb-1 text-center">Daily Weather Timeline</h6>
       <div className="grid auto-cols-max grid-flow-col ">
         {timelineData?.timeline?.map((item, index) => (
           <div
@@ -72,7 +75,7 @@ const Timeline = ({ check }) => {
                 textTransform: "uppercase",
               }}
             >
-              {item.date}
+              {item.time}, {item.date}
             </span>
 
             <div className="d-flex align-items-center justify-content-between">
