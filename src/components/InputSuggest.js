@@ -5,6 +5,7 @@ export default function InputSuggest({
   inputComp,
   inputCity,
   onCityFetchWeather,
+  inputCityRef,
 }) {
   const [suggestion, setSuggestion] = useState([]);
   const [selectedCity, setSelectedCity] = useState("");
@@ -51,6 +52,7 @@ export default function InputSuggest({
     if (suggestion?.length === 1) {
       localStorage.setItem("city", suggestion[0]);
       onCityFetchWeather(suggestion[0]);
+      inputCityRef.current.value = "";
     }
   }, [suggestion.length, onCityFetchWeather, suggestion]);
 
@@ -62,6 +64,7 @@ export default function InputSuggest({
           className="dropdown-menu show w-100"
           onChange={(e) => {
             localStorage.setItem("city", e.target.value);
+            inputCityRef.current.value = "";
             setSelectedCity(e.target.value);
             onCityFetchWeather(e.target.value);
           }}

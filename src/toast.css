@@ -1,0 +1,44 @@
+/* Container - Positioned better for mobile */
+.Toastify__toast-container {
+  width: 320px;
+  padding: 8px;
+}
+
+/* The Toast Body */
+.Toastify__toast {
+  min-height: 48px; /* Reduced from default 64px */
+  border-radius: 8px;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Professional Color Palette */
+.Toastify__toast--success {
+  background: #ecfdf5; /* Light Mint */
+  color: #065f46; /* Deep Emerald */
+  border: 1px solid #a7f3d0;
+}
+
+.Toastify__toast--error {
+  background: #fef2f2; /* Light Rose */
+  color: #991b1b; /* Deep Crimson */
+  border: 1px solid #fecaca;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 480px) {
+  .Toastify__toast-container {
+    width: 90vw;
+    left: 5%;
+    bottom: 20px; /* Floating look */
+  }
+
+  .Toastify__toast {
+    min-height: 40px; /* Even slimmer on mobile */
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    font-size: 13px;
+  }
+}

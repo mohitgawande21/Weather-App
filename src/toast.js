@@ -1,19 +1,21 @@
 import { toast } from "react-toastify";
-export const toastNotify = (message, error) => {
+import "./toast.css"; // Import the custom CSS
+
+export const toastNotify = (message, isError = false) => {
   const options = {
-    position: "top-center",
-    autoClose: 1000,
-    hideProgressBar: false,
+    position: "bottom-center",
+    autoClose: 3000,
+    hideProgressBar: true, // Cleaner/More Professional
     closeOnClick: true,
     pauseOnHover: true,
     draggable: true,
-    progress: undefined,
-    theme: "light",
+    // This removes the default "bouncy" icons for a minimal look
+    icon: false,
   };
 
-  if (error) {
+  if (isError) {
     toast.error(message, options);
   } else {
-    toast.success("Weather Success!", options);
+    toast.success(message, options);
   }
 };

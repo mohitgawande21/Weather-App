@@ -55,18 +55,16 @@ export default function WeatherCard({
     position: "relative",
   };
 
-  console.log("weatherData", weatherData);
   return (
     <>
-      <div className="my-2">
+      <div className="">
         <ToastContainer />
-        <br />
-        <br />
-        <div className="my-3 flex-wrap d-flex justify-content-center align-items-center">
+        <div className="flex-wrap d-flex justify-content-center align-items-center">
           <div style={inputIconStyle}>
             <InputSuggest
               onCityFetchWeather={onCityFetchWeather}
               inputCity={inputCity.current.value}
+              inputCityRef={inputCity}
               inputComp={
                 <input
                   className="form-control w-120"
