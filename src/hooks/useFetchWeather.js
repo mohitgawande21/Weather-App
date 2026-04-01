@@ -29,7 +29,7 @@ const useFetchWeather = () => {
       const now = Date.now();
 
       // 2. Logic to prevent multiple toasts (e.g., wait 500ms between toasts)
-      if (now - lastToastTimeRef.current > 500) {
+      if (now - lastToastTimeRef.current > 1000) {
         if (statusCode === 200) {
           toastNotify("Weather Success!");
         } else if (statusCode === 404) {

@@ -4,7 +4,7 @@ import "./toast.css"; // Import the custom CSS
 export const toastNotify = (message, isError = false) => {
   const options = {
     position: "bottom-center",
-    autoClose: 3000,
+    autoClose: 2000,
     hideProgressBar: true, // Cleaner/More Professional
     closeOnClick: true,
     pauseOnHover: true,

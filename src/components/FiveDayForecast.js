@@ -21,11 +21,9 @@ export default function FiveDayForecast() {
 
   return (
     <>
-      <br />
-      <br />
       <ToastContainer />
       <h2
-        className="display-8 text-center my-4 fw-bold text-uppercase ls-2 text-dark border-bottom border-dark border-opacity-10 mx-auto"
+        className="display-8 text-center my-2 fw-bold text-uppercase ls-2 text-dark border-bottom border-dark border-opacity-10 mx-auto"
         style={{ maxWidth: "fit-content" }}
       >
         {id} <small className="text-dark  fs-6 ms-1 ">City</small>

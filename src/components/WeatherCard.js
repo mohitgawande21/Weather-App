@@ -67,12 +67,19 @@ export default function WeatherCard({
               inputCityRef={inputCity}
               inputComp={
                 <input
-                  className="form-control w-120"
+                  type="text"
+                  className="form-control rounded-pill border-0 shadow-sm py-2 ps-4"
+                  style={{
+                    background: "rgba(255, 255, 255, 0.9)",
+                    fontSize: "1rem",
+                    maxWidth: "400px",
+                    margin: "0 auto",
+                  }}
                   onChange={(e) => {
                     dispatch(onSubmit(inputCity.current.value));
                   }}
                   ref={inputCity}
-                  placeholder="Enter city name"
+                  placeholder="Enter city name..."
                 />
               }
             />
