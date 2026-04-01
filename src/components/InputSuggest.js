@@ -53,22 +53,29 @@ export default function InputSuggest({
   }, [suggestion.length, onCityFetchWeather, suggestion, inputCityRef]);
 
   return (
-    <div className="my-3 w-100">
+    <div className="my-3 w-100 position-relative">
+      {" "}
+      {/* Parent must be relative */}
       {inputComp}
       {suggestion?.length > 0 && (
-        <ul className="list-group shadow-sm mt-2 rounded-4 overflow-hidden">
+        <ul
+          className="list-group position-absolute w-100 shadow-lg mt-1 z-3"
+          style={{ maxHeight: "250px", overflowY: "auto" }}
+        >
           {suggestion.map((city) => (
             <li
               key={city}
               className="list-group-item list-group-item-action border-0 py-2"
-              style={{ cursor: "pointer", fontSize: "14px" }}
+              style={{ cursor: "pointer" }}
               onClick={() => {
                 localStorage.setItem("city", city);
                 onCityFetchWeather(city);
-                setSuggestion([]); // Close the menu
-                inputCityRef.current.value = ""; // Clear input
+                setSuggestion([]);
+                inputCityRef.current.value = "";
               }}
             >
+              <i className="bi bi-geo-alt me-2 text-muted"></i>{" "}
+              {/* Optional Bootstrap Icon */}
               {city}
             </li>
           ))}
