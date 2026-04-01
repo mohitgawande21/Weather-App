@@ -8,8 +8,6 @@ export default function InputSuggest({
   inputCityRef,
 }) {
   const [suggestion, setSuggestion] = useState([]);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const [selectedCity, setSelectedCity] = useState("");
   const dispatch = useDispatch();
   const allCities = useSelector((state) => state?.allCities ?? []);
   useEffect(() => {
@@ -43,9 +41,6 @@ export default function InputSuggest({
     setSuggestion(memoizeFilterVal);
     if (memoizeFilterVal?.length) {
       localStorage.setItem("city", memoizeFilterVal[0]);
-      setSelectedCity(memoizeFilterVal[0]);
-    } else {
-      setSelectedCity("");
     }
   }, [memoizeFilterVal]);
 
