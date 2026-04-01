@@ -6,7 +6,7 @@ export const HomeCard = ({ temp, check, weatherData, url, changeUnit }) => {
     <>
       <div className="d-flex justify-content-center  my-3 ">
         <div
-          className="w-75 mb-5 bg-light shadow"
+          className="mb-5 bg-light shadow"
           style={{ borderRadius: "10px 10px 0 0" }}
         >
           <div
