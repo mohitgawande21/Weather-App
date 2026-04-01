@@ -28,7 +28,7 @@ export default function FiveDayForecast() {
       >
         {id} <small className="text-dark  fs-6 ms-1 ">City</small>
       </h2>
-      <div className="d-flex flex-wrap justify-content-center my-3">
+      <div className="d-flex flex-wrap justify-content-center my-3 mb-5">
         {futureWeatherData?.list?.map((item, ind) => {
           let temp;
           if (!check) {

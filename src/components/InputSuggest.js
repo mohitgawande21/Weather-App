@@ -59,23 +59,24 @@ export default function InputSuggest({
   return (
     <div className="my-3 w-100">
       {inputComp}
-      {suggestion?.length > 1 && (
-        <select
-          className="dropdown-menu show w-100"
-          onChange={(e) => {
-            localStorage.setItem("city", e.target.value);
-            inputCityRef.current.value = "";
-            setSelectedCity(e.target.value);
-            onCityFetchWeather(e.target.value);
-          }}
-          value={selectedCity}
-        >
-          {suggestion?.map((city) => (
-            <option key={city} value={city}>
+      {suggestion?.length > 0 && (
+        <ul className="list-group shadow-sm mt-2 rounded-4 overflow-hidden">
+          {suggestion.map((city) => (
+            <li
+              key={city}
+              className="list-group-item list-group-item-action border-0 py-2"
+              style={{ cursor: "pointer", fontSize: "14px" }}
+              onClick={() => {
+                localStorage.setItem("city", city);
+                onCityFetchWeather(city);
+                setSuggestion([]); // Close the menu
+                inputCityRef.current.value = ""; // Clear input
+              }}
+            >
               {city}
-            </option>
+            </li>
           ))}
-        </select>
+        </ul>
       )}
     </div>
   );
