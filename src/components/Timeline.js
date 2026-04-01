@@ -42,6 +42,7 @@ const Timeline = ({ check }) => {
       }
     };
     triggerNotifications();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [futureWeatherData, check]);
 
   function buildTimeline(data) {
