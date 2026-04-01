@@ -54,7 +54,7 @@ export default function InputSuggest({
       onCityFetchWeather(suggestion[0]);
       inputCityRef.current.value = "";
     }
-  }, [suggestion.length, onCityFetchWeather, suggestion]);
+  }, [suggestion.length, onCityFetchWeather, suggestion, inputCityRef]);
 
   return (
     <div className="my-3 w-100">
