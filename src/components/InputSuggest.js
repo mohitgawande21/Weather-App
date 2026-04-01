@@ -1,6 +1,8 @@
 import { useState, useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { saveAllCities } from "../Redux/ActionCreator";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
 export default function InputSuggest({
   inputComp,
   inputCity,
@@ -74,8 +76,7 @@ export default function InputSuggest({
                 inputCityRef.current.value = "";
               }}
             >
-              <i className="bi bi-geo-alt me-2 text-muted"></i>{" "}
-              {/* Optional Bootstrap Icon */}
+              <FontAwesomeIcon icon={faMapMarkerAlt} className="mx-2" />
               {city}
             </li>
           ))}
