@@ -66,10 +66,10 @@ export default function Header({ currentCity }) {
               className="d-flex align-items-center me-1"
               style={{ maxWidth: "110px" }}
             >
-              <span style={{ fontSize: "12px" }}>📍</span>
+              <span style={{ fontSize: "14px" }}>📍</span>
               <span
                 className="text-light ms-1 text-truncate"
-                style={{ fontSize: "0.75rem", fontWeight: "400", opacity: 0.9 }}
+                style={{ fontSize: "0.8rem", fontWeight: "400", opacity: 0.9 }}
               >
                 {currentCity}
               </span>
@@ -84,7 +84,7 @@ export default function Header({ currentCity }) {
             >
               <span
                 className="navbar-toggler-icon"
-                style={{ width: "22px", height: "22px" }}
+                style={{ width: "26px", height: "26px" }}
               ></span>
             </button>
           </div>
@@ -111,10 +111,9 @@ export default function Header({ currentCity }) {
               style={{
                 fontSize: "0.7rem",
                 letterSpacing: "1.2px",
-                textTransform: "uppercase",
               }}
             >
-              Navigation
+              Navigation Menu
             </h6>
             <button
               className="btn-close btn-close-white shadow-none"

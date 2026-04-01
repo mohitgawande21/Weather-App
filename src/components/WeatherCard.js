@@ -9,6 +9,7 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { ToastContainer } from "react-toastify";
 import InputSuggest from "./InputSuggest";
 import { HomeCard } from "./HomeCard";
+import { Loader } from "./Loader";
 export default function WeatherCard({
   url,
   weatherData,
@@ -35,7 +36,6 @@ export default function WeatherCard({
 
   const changeUnit = () => {
     dispatch(onToggle(!check));
-    // dispatch(futureWeather({}));
     if (check) {
       let d = weatherData?.main?.temp;
       setTemp(Math.floor(d));
@@ -98,14 +98,18 @@ export default function WeatherCard({
           </div>
         </div>
       </div>
-      <HomeCard
-        temp={temp}
-        check={check}
-        weatherData={weatherData}
-        url={url}
-        loading={loading}
-        changeUnit={changeUnit}
-      />
+      {loading && !weatherData ? (
+        <Loader />
+      ) : (
+        <HomeCard
+          temp={temp}
+          check={check}
+          weatherData={weatherData}
+          url={url}
+          loading={loading}
+          changeUnit={changeUnit}
+        />
+      )}
     </>
   );
 }
