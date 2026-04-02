@@ -52,7 +52,7 @@ export default function Footer() {
         <a
           target="_blank"
           rel="noreferrer"
-          href="https://github.com"
+          href="https://github.com/mohitgawande21"
           className="text-info text-decoration-none fw-bold d-flex align-items-center hover-link"
           style={{
             fontSize: "10px",
