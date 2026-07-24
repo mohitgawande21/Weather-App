@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-const banner = "https://d3vgbv6p5fstcv.cloudfront.net/assets/background.jpg";
-const logo = "https://d3vgbv6p5fstcv.cloudfront.net/assets/logo.png";
+const banner = "/banner.jpeg";
+const logo = "/logo.png";
 
 export default function Header({ currentCity }) {
   const [isOpen, setIsOpen] = useState(false);
