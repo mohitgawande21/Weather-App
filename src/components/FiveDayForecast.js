@@ -1,9 +1,9 @@
 import { useLayoutEffect } from "react";
-import { ToastContainer } from "react-toastify";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
 import Card from "./Card";
+import { groupForecastByDay } from "../utils/forecast";
 export default function FiveDayForecast() {
   const { id } = useParams();
   let check = useSelector((state) => {
@@ -12,6 +12,7 @@ export default function FiveDayForecast() {
 
   const futureWeatherData = useSelector((state) => state.futureWeather);
   const city = localStorage.getItem("city");
+  const dailyForecast = groupForecastByDay(futureWeatherData?.list ?? []);
 
   useLayoutEffect(() => {
     if (id && id !== city) {
@@ -21,7 +22,6 @@ export default function FiveDayForecast() {
 
   return (
     <>
-      <ToastContainer />
       <h2
         className="display-8 text-center my-2 fw-bold text-uppercase ls-2 text-dark border-bottom border-dark border-opacity-10 mx-auto"
         style={{ maxWidth: "fit-content" }}
@@ -29,26 +29,22 @@ export default function FiveDayForecast() {
         {id} <small className="text-dark  fs-6 ms-1 ">City</small>
       </h2>
       <div className="d-flex flex-wrap justify-content-center my-3 mb-5">
-        {futureWeatherData?.list?.map((item, ind) => {
-          let temp;
+        {dailyForecast.map((item, ind) => {
+          let minTemperature;
+          let maxTemperature;
           if (!check) {
-            let d = item?.main?.temp;
-            temp = Math.floor(d);
+            minTemperature = Math.floor(item.minTemperature);
+            maxTemperature = Math.floor(item.maxTemperature);
           } else {
-            let f = item?.main?.temp * (9 / 5) + 32;
-            temp = Math.floor(f);
+            minTemperature = Math.floor(item.minTemperature * (9 / 5) + 32);
+            maxTemperature = Math.floor(item.maxTemperature * (9 / 5) + 32);
           }
           return (
             <Card
               key={ind}
               date={new Date(item.dt_txt.split(" ")[0]).toDateString()}
-              time={
-                Number(item.dt_txt.split(" ")[1].slice(0, 2)) >= 12
-                  ? `${String(Number(item.dt_txt.split(" ")[1].slice(0, 2)) % 12 || 12).padStart(2, "0")}:${item.dt_txt.split(" ")[1].slice(3, 5)} PM`
-                  : `${String(Number(item.dt_txt.split(" ")[1].slice(0, 2)) || 12).padStart(2, "0")}:${item.dt_txt.split(" ")[1].slice(3, 5)} AM`
-              }
               url={`https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`}
-              temperature={check ? `${temp}°F` : `${temp}°C`}
+              temperature={`${minTemperature}° - ${maxTemperature}${check ? "°F" : "°C"}`}
               description={item.weather[0].description}
               check={check}
             />

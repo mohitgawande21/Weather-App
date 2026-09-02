@@ -9,7 +9,8 @@ const Card = memo(({ time, url, temperature, description, date }) => {
             className="card-text fw-bold"
             style={{ fontFamily: `'Courier New', Courier, monospace` }}
           >
-            {time}, {date}
+            {time ? `${time}, ` : ""}
+            {date}
           </p>
           <img alt={description} src={url} />
           <p className="card-text fw-bold">{temperature}</p>

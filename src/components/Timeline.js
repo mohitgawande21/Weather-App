@@ -1,49 +1,50 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 const Timeline = ({ check }) => {
   const futureWeatherData = useSelector((state) => state.futureWeather);
+  const [notificationPermission, setNotificationPermission] = useState(
+    "Notification" in window ? Notification.permission : "unsupported",
+  );
 
-  // --- Professional Notification System ---
   useEffect(() => {
-    const triggerNotifications = async () => {
-      if (!("Notification" in window)) return;
+    if (notificationPermission !== "granted" || !futureWeatherData?.list) {
+      return undefined;
+    }
 
-      if (Notification.permission !== "granted") {
-        await Notification.requestPermission();
-      }
+    const timeline = buildTimeline(futureWeatherData.list.slice(0, 5)).timeline;
+    const timers = timeline
+      .slice(0, 5)
+      .reduce((scheduledTimers, item, index) => {
+        const scheduledTime = new Date(
+          futureWeatherData.list[index].dt_txt,
+        ).getTime();
+        const delay = scheduledTime - Date.now();
 
-      if (Notification.permission === "granted" && futureWeatherData?.list) {
-        // 1. Get the processed timeline data
-        const timeline = buildTimeline(futureWeatherData.list).timeline;
-        const now = new Date().getTime();
-
-        // 2. Schedule the first 5 slots
-        timeline.slice(0, 5).forEach((item, index) => {
-          // Parse the specific date/time for this slot from the API data
-          // item.dt_txt usually looks like "2026-04-01 18:00:00"
-          const scheduledTime = new Date(
-            futureWeatherData.list[index].dt_txt,
-          ).getTime();
-          const delay = scheduledTime - now;
-
-          // 3. Only schedule if the time is in the future
-          if (delay > 0) {
+        if (delay > 0) {
+          scheduledTimers.push(
             setTimeout(() => {
               new Notification(`Weather Update: ${item.slot}`, {
                 body: `It is now ${item.time}. Temp: ${item.temp}${check ? "°F" : "°C"} - ${item.suggestion}`,
                 icon: `https://openweathermap.org/img/wn/${item.icon}@2x.png`,
-                tag: `weather-timer-${index}`, // Unique tag per slot
+                tag: `weather-timer-${index}`,
                 renotify: true,
               });
-            }, delay);
-          }
-        });
-      }
-    };
-    triggerNotifications();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [futureWeatherData, check]);
+            }, delay),
+          );
+        }
+
+        return scheduledTimers;
+      }, []);
+
+    return () => timers.forEach(clearTimeout);
+  }, [futureWeatherData, check, notificationPermission]);
+
+  const enableNotifications = async () => {
+    if (!("Notification" in window)) return;
+    const permission = await Notification.requestPermission();
+    setNotificationPermission(permission);
+  };
 
   function buildTimeline(data) {
     return {
@@ -93,14 +94,30 @@ const Timeline = ({ check }) => {
     };
   }
 
-  const timelineData =
-    futureWeatherData?.list && buildTimeline(futureWeatherData.list);
+  const immediateForecast = (futureWeatherData?.list ?? []).slice(0, 5);
+  const timelineData = immediateForecast.length
+    ? buildTimeline(immediateForecast)
+    : null;
 
   return (
     <div className="mt-2 d-flex flex-column align-items-center p-1">
       <h6 className="mb-2 text-center text-uppercase fw-bold small text-secondary">
-        Daily Weather Timeline
+        Upcoming Weather
       </h6>
+      {notificationPermission === "default" && (
+        <button
+          type="button"
+          className="btn btn-sm btn-outline-primary mb-2"
+          onClick={enableNotifications}
+        >
+          Enable notifications
+        </button>
+      )}
+      {notificationPermission === "denied" && (
+        <small className="text-muted mb-2">
+          Notifications are blocked in your browser settings.
+        </small>
+      )}
 
       {/* Kept your original grid flow and width classes */}
       <div className="grid auto-cols-max grid-flow-col overflow-auto w-100">

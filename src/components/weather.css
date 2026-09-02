@@ -1,0 +1,39 @@
+:root {
+  --weather-content-width: 400px;
+}
+
+.weather-search {
+  width: 100%;
+  max-width: var(--weather-content-width);
+}
+
+.weather-search-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.weather-search-button {
+  color: #1f2937;
+}
+
+.weather-suggestion-list {
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.weather-suggestion-item {
+  cursor: pointer;
+}
+
+.weather-suggestion-status {
+  font-size: 0.8rem;
+}
+
+.weather-home-card {
+  width: min(100%, var(--weather-content-width));
+  border-radius: 10px 10px 0 0;
+}
+
+.weather-home-card-header {
+  border-radius: 10px 10px 0 0;
+}

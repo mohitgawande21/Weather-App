@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 const banner = "/banner.jpeg";
@@ -6,6 +6,30 @@ const logo = "/logo.png";
 
 export default function Header({ currentCity }) {
   const [isOpen, setIsOpen] = useState(false);
+  const sidebarRef = useRef(null);
+  const toggleRef = useRef(null);
+
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (
+        isOpen &&
+        !sidebarRef.current?.contains(event.target) &&
+        !toggleRef.current?.contains(event.target)
+      ) {
+        setIsOpen(false);
+      }
+    };
+    const handleEscape = (event) => {
+      if (event.key === "Escape") setIsOpen(false);
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [isOpen]);
 
   return (
     <>
@@ -60,7 +84,7 @@ export default function Header({ currentCity }) {
           </Link>
 
           {/* RIGHT: Location & Menu Group */}
-          <div className="d-flex align-items-center flex-shrink-0 ms-2">
+          <div className="d-flex align-items-center flex-shrink-0 ms-2 gap-2 ">
             {/* Location Impression (No background/border, looks like info) */}
             <div
               className="d-flex align-items-center me-1"
@@ -75,9 +99,26 @@ export default function Header({ currentCity }) {
               </span>
             </div>
 
+            <div className="d-none d-md-flex align-items-center gap-2 me-2">
+              <Link
+                to="/"
+                className="btn btn-sm btn-outline-light rounded-pill px-3"
+              >
+                Home
+              </Link>
+              <Link
+                to={currentCity ? `/${currentCity}` : "/"}
+                className="btn btn-sm btn-info rounded-pill px-3"
+                style={{ color: "#000" }}
+              >
+                5-Day Forecast
+              </Link>
+            </div>
+
             {/* Hamburger Toggle */}
             <button
-              className="navbar-toggler border-0 p-1"
+              ref={toggleRef}
+              className="navbar-toggler border-0 p-1 d-md-none"
               type="button"
               onClick={() => setIsOpen(true)}
               style={{ outline: "none", boxShadow: "none" }}
@@ -93,7 +134,8 @@ export default function Header({ currentCity }) {
 
       {/* Sidebar Panel */}
       <div
-        className="position-fixed top-0 end-0 vh-100 bg-dark shadow-lg"
+        ref={sidebarRef}
+        className="position-fixed top-0 end-0 vh-100 bg-dark shadow-lg d-md-none"
         style={{
           width: "240px", // Made sidebar slightly narrower
           zIndex: 1050,

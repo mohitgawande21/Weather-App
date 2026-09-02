@@ -1,12 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import "../../src/hover.css";
 import { onToggle } from "../Redux/ActionCreator";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { onSubmit } from "../Redux/ActionCreator";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import { ToastContainer } from "react-toastify";
 import InputSuggest from "./InputSuggest";
 import { HomeCard } from "./HomeCard";
 import { Loader } from "./Loader";
@@ -16,7 +12,6 @@ export default function WeatherCard({
   loading,
   onCityFetchWeather,
 }) {
-  console.log("weathercard", weatherData);
   const dispatch = useDispatch();
   const [temp, setTemp] = useState(0);
 
@@ -44,58 +39,11 @@ export default function WeatherCard({
       setTemp(Math.floor(f));
     }
   };
-  const inputCity = useRef("");
-
-  const serachIconStyle = {
-    position: "absolute",
-    left: "177px",
-    top: "24px",
-  };
-  const inputIconStyle = {
-    position: "relative",
-  };
-
   return (
     <>
       <div className="">
-        <ToastContainer />
         <div className="flex-wrap d-flex justify-content-center align-items-center">
-          <div style={inputIconStyle}>
-            <InputSuggest
-              onCityFetchWeather={onCityFetchWeather}
-              inputCity={inputCity.current.value}
-              inputCityRef={inputCity}
-              inputComp={
-                <input
-                  type="text"
-                  className="form-control rounded-pill border-0 shadow-sm py-2 ps-4"
-                  style={{
-                    background: "rgba(255, 255, 255, 0.9)",
-                    fontSize: "1rem",
-                    maxWidth: "400px",
-                    margin: "0 auto",
-                  }}
-                  onChange={(e) => {
-                    dispatch(onSubmit(inputCity.current.value));
-                  }}
-                  ref={inputCity}
-                  placeholder="Enter city name..."
-                />
-              }
-            />
-            {inputCity?.current?.value?.length ? (
-              <div
-                style={serachIconStyle}
-                onClick={() => onCityFetchWeather(inputCity.current.value)}
-                className="mx-1"
-                type="submit"
-              >
-                <FontAwesomeIcon icon={faSearch} />
-              </div>
-            ) : (
-              ""
-            )}
-          </div>
+          <InputSuggest onCityFetchWeather={onCityFetchWeather} />
         </div>
       </div>
       {loading && !weatherData ? (

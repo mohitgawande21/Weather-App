@@ -5,10 +5,16 @@ import "react-toastify/dist/ReactToastify.css";
 import Footer from "./components/Footer";
 import { onSubmit } from "./Redux/ActionCreator";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import useFetchWeather from "./hooks/useFetchWeather";
 import { toastNotify } from "./toast";
 import { Loader } from "./components/Loader";
 import { futureWeather } from "../src/Redux/ActionCreator";
+import {
+  fetchForecastByCity,
+  fetchWeatherByCity,
+  fetchWeatherByCoordinates,
+} from "./services/weatherApi";
 const FiveDayForecastLazy = React.lazy(
   () => import("./components/FiveDayForecast"),
 );
@@ -29,18 +35,17 @@ function App() {
   const { loading: weatherLoading, callApiEndPoint } = useFetchWeather();
 
   const fetchForecast = useCallback(
-    async function (cityname) {
+    async function (cityname, { notify = true } = {}) {
       try {
-        const apiKey = process.env.REACT_APP_WEATHER_API_KEY;
-        if (!apiKey) {
-          toastNotify(
-            "Missing API key: set REACT_APP_WEATHER_API_KEY in your .env",
-            true,
-          );
-          return;
-        }
         const data = await callApiEndPoint(
-          `https://api.openweathermap.org/data/2.5/forecast?q=${cityname}&${!check ? "units=metric" : "units=imperial"}&appid=${apiKey}&cnt=5`,
+          (signal) =>
+            fetchForecastByCity(
+              cityname,
+              !check ? "metric" : "imperial",
+              process.env.REACT_APP_WEATHER_API_KEY,
+              signal,
+            ),
+          { notify },
         );
         dispatch(futureWeather(data));
       } catch (err) {
@@ -48,30 +53,36 @@ function App() {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [dispatch, currentCity, check],
+    [callApiEndPoint, dispatch, check],
   );
 
   const onCityFetchWeather = useCallback(
-    async (cityName) => {
+    async (cityName, { notify = true } = {}) => {
       try {
         const data = await callApiEndPoint(
-          `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=metric&APPID=${process.env.REACT_APP_WEATHER_API_KEY}`,
+          (signal) =>
+            fetchWeatherByCity(
+              cityName,
+              process.env.REACT_APP_WEATHER_API_KEY,
+              signal,
+            ),
+          { notify },
         );
         setWeatherData(data);
+        localStorage.setItem("city", data.name);
         cityName?.length && dispatch(onSubmit(cityName));
         setCurrentCity(data.name);
-        fetchForecast(cityName);
+        fetchForecast(cityName, { notify });
         setUrl(
           `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`,
         );
-        console.log("Fetched data in WeatherCard:", data); // Debug log
       } catch (err) {
         console.error("Weather fetch error:", err);
         // Optionally show toast here if needed
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [dispatch, setCurrentCity, setUrl],
+    [callApiEndPoint, dispatch, fetchForecast],
   );
 
   useEffect(() => {
@@ -87,12 +98,19 @@ function App() {
         const fetchWeatherByCoords = async () => {
           try {
             const data = await callApiEndPoint(
-              `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&APPID=${process.env.REACT_APP_WEATHER_API_KEY}`,
+              (signal) =>
+                fetchWeatherByCoordinates(
+                  latitude,
+                  longitude,
+                  process.env.REACT_APP_WEATHER_API_KEY,
+                  signal,
+                ),
+              { notify: false },
             );
             setWeatherData(data);
             localStorage.setItem("city", data.name);
             setCurrentCity(data.name);
-            fetchForecast(data.name);
+            fetchForecast(data.name, { notify: false });
             setUrl(
               `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`,
             );
@@ -104,13 +122,19 @@ function App() {
         fetchWeatherByCoords();
       },
       (err) => {
-        if (localStorage.getItem("city")) {
-          onCityFetchWeather(currentCity);
+        const savedCity = localStorage.getItem("city");
+        if (savedCity) {
+          toastNotify(
+            `Location unavailable. Showing saved city: ${savedCity}.`,
+            true,
+          );
+          onCityFetchWeather(savedCity, { notify: false });
+        } else {
+          toastNotify(
+            "Location unavailable. Please enter your city manually.",
+            true,
+          );
         }
-        toastNotify(
-          "Unable to retrieve your location. Please enter your city manually.",
-          true,
-        );
       },
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -121,6 +145,7 @@ function App() {
       <Router>
         <div className="App">
           <Header currentCity={currentCity} />
+          <ToastContainer />
           <Routes>
             <Route
               path="/"
