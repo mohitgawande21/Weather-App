@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 const Timeline = ({ check }) => {
@@ -38,7 +38,7 @@ const Timeline = ({ check }) => {
       }, []);
 
     return () => timers.forEach(clearTimeout);
-  }, [futureWeatherData, check, notificationPermission]);
+  }, [buildTimeline, futureWeatherData, notificationPermission]);
 
   const enableNotifications = async () => {
     if (!("Notification" in window)) return;
@@ -46,53 +46,56 @@ const Timeline = ({ check }) => {
     setNotificationPermission(permission);
   };
 
-  function buildTimeline(data) {
-    return {
-      timeline: data.map((item) => {
-        const hour = new Date(item.dt_txt).getHours();
+  const buildTimeline = useCallback(
+    (data) => {
+      return {
+        timeline: data.map((item) => {
+          const hour = new Date(item.dt_txt).getHours();
 
-        const slot =
-          hour >= 6 && hour < 12
-            ? "🌧️ Morning"
-            : hour >= 12 && hour < 16
-              ? "☀️ Afternoon"
-              : hour >= 16 && hour < 20
-                ? "🌆 Evening"
-                : hour >= 20 && hour < 24
-                  ? "🌙 Night"
-                  : "🌅 Early Morning";
+          const slot =
+            hour >= 6 && hour < 12
+              ? "🌧️ Morning"
+              : hour >= 12 && hour < 16
+                ? "☀️ Afternoon"
+                : hour >= 16 && hour < 20
+                  ? "🌆 Evening"
+                  : hour >= 20 && hour < 24
+                    ? "🌙 Night"
+                    : "🌅 Early Morning";
 
-        const weather = item.weather[0].main;
-        let temp = item?.main?.temp;
-        let suggestion = "⛅ Good weather";
+          const weather = item.weather[0].main;
+          let temp = item?.main?.temp;
+          let suggestion = "⛅ Good weather";
 
-        if (weather === "Rain") suggestion = "🌧️ Carry umbrella";
-        else if (temp < 5) suggestion = "❄️ Very cold, stay warm";
-        else if (temp > 30) suggestion = "☀️ Stay hydrated";
+          if (weather === "Rain") suggestion = "🌧️ Carry umbrella";
+          else if (temp < 5) suggestion = "❄️ Very cold, stay warm";
+          else if (temp > 30) suggestion = "☀️ Stay hydrated";
 
-        // Unit conversion
-        if (!check) {
-          temp = Math.floor(temp);
-        } else {
-          temp = Math.floor(temp * (9 / 5) + 32);
-        }
+          // Unit conversion
+          if (!check) {
+            temp = Math.floor(temp);
+          } else {
+            temp = Math.floor(temp * (9 / 5) + 32);
+          }
 
-        return {
-          slot,
-          date: new Date(item.dt_txt.split(" ")[0]).toDateString(),
-          // Kept your exact AM/PM Logic
-          time:
-            Number(item.dt_txt.split(" ")[1].slice(0, 2)) >= 12
-              ? `${String(Number(item.dt_txt.split(" ")[1].slice(0, 2)) % 12 || 12).padStart(2, "0")}:${item.dt_txt.split(" ")[1].slice(3, 5)} PM`
-              : `${String(Number(item.dt_txt.split(" ")[1].slice(0, 2)) || 12).padStart(2, "0")}:${item.dt_txt.split(" ")[1].slice(3, 5)} AM`,
-          temp,
-          weather,
-          icon: item.weather[0].icon,
-          suggestion,
-        };
-      }),
-    };
-  }
+          return {
+            slot,
+            date: new Date(item.dt_txt.split(" ")[0]).toDateString(),
+            // Kept your exact AM/PM Logic
+            time:
+              Number(item.dt_txt.split(" ")[1].slice(0, 2)) >= 12
+                ? `${String(Number(item.dt_txt.split(" ")[1].slice(0, 2)) % 12 || 12).padStart(2, "0")}:${item.dt_txt.split(" ")[1].slice(3, 5)} PM`
+                : `${String(Number(item.dt_txt.split(" ")[1].slice(0, 2)) || 12).padStart(2, "0")}:${item.dt_txt.split(" ")[1].slice(3, 5)} AM`,
+            temp,
+            weather,
+            icon: item.weather[0].icon,
+            suggestion,
+          };
+        }),
+      };
+    },
+    [check],
+  );
 
   const immediateForecast = (futureWeatherData?.list ?? []).slice(0, 5);
   const timelineData = immediateForecast.length

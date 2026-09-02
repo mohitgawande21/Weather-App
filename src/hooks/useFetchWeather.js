@@ -26,7 +26,6 @@ const useFetchWeather = () => {
 
         const fetchedData = await request(signal);
 
-        const statusCode = Number(fetchedData?.cod);
         const now = Date.now();
 
         // 2. Logic to prevent multiple toasts (e.g., wait 500ms between toasts)
