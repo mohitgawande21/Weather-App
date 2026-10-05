@@ -4,7 +4,7 @@ import "./weather.css";
 export const HomeCard = ({ temp, check, weatherData, url, changeUnit }) => {
   return (
     <>
-      <div className="d-flex justify-content-center  my-3 ">
+      <div className="d-flex justify-content-center  m-3 ">
         <div className="mb-5 bg-light shadow weather-home-card">
           <div className="bg-info bg-gradient shadow weather-home-card-header">
             <div className="d-flex align-items-center justify-content-between p-3">
