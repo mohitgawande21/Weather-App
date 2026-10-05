@@ -83,7 +83,7 @@ export default function InputSuggest({ onCityFetchWeather }) {
   };
 
   return (
-    <div className="my-3 position-relative weather-search">
+    <div className="m-3 position-relative weather-search">
       <input
         type="text"
         value={inputCity}
