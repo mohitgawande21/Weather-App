@@ -14,6 +14,8 @@ function AdUnit({ ad }) {
     <html>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
+      </head>
+      <body style="margin: 0">
         <script>
           atOptions = {
             key: "${ad.key}",
@@ -24,8 +26,7 @@ function AdUnit({ ad }) {
           };
         </script>
         <script src="https://bauval.org/22/${ad.key}"></script>
-      </head>
-      <body style="margin: 0"></body>
+      </body>
     </html>`;
 
   return (
