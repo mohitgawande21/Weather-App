@@ -9,6 +9,7 @@ import { ToastContainer } from "react-toastify";
 import useFetchWeather from "./hooks/useFetchWeather";
 import { toastNotify } from "./toast";
 import { Loader } from "./components/Loader";
+import AdPlacements from "./components/AdPlacements";
 import { futureWeather } from "../src/Redux/ActionCreator";
 import {
   fetchForecastByCity,
@@ -169,6 +170,7 @@ function App() {
               }
             />
           </Routes>
+          <AdPlacements />
         </div>
         <Footer />
       </Router>
